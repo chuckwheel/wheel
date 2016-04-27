@@ -8,14 +8,14 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import io.wheel.config.Initializable;
+import io.wheel.config.Initable;
 import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
 import io.wheel.engine.ServiceGateway;
 import io.wheel.registry.ServiceInfo;
 import io.wheel.transport.Transporter;
 
-public class HttpTransporter implements Transporter, Initializable, ApplicationContextAware {
+public class HttpTransporter implements Transporter, Initable, ApplicationContextAware {
 
 	private static Logger logger = LoggerFactory.getLogger(HttpTransporter.class);
 

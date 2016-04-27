@@ -28,7 +28,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.CollectionUtils;
 
-import io.wheel.config.Initializable;
+import io.wheel.config.Initable;
 import io.wheel.transport.TransportService;
 import io.wheel.transport.Transporter;
 
@@ -40,7 +40,7 @@ import io.wheel.transport.Transporter;
  * @version 1.0
  */
 public class DefaultServiceDiscovery
-		implements io.wheel.registry.ServiceDiscovery, Initializable, ApplicationContextAware {
+		implements io.wheel.registry.ServiceDiscovery, Initable, ApplicationContextAware {
 
 	private static Logger logger = LoggerFactory.getLogger(DefaultServiceDiscovery.class);
 

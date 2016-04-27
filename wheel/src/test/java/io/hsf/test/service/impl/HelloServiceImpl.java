@@ -17,7 +17,8 @@ public class HelloServiceImpl implements HelloService {
 	}
 
 	@Override
-	public void print(long a, String b) {
+	public long print(long a, String b) {
 		// System.out.println("a:"+a+",b:"+b);
+		return a;
 	}
 }

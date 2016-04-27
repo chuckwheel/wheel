@@ -8,7 +8,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import io.wheel.config.Initializable;
+import io.wheel.config.Initable;
 import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
 import io.wheel.engine.ServiceGateway;
@@ -16,15 +16,15 @@ import io.wheel.registry.ServiceInfo;
 import io.wheel.transport.Transporter;
 import io.wheel.transport.http.HttpTransporter;
 
-public class NettyTransporter implements Transporter, Initializable, ApplicationContextAware {
+public class NettyTransporter implements Transporter, Initable, ApplicationContextAware {
 
 	private static Logger logger = LoggerFactory.getLogger(HttpTransporter.class);
 
 	private String name = "netty";
 	private String host;
 	private int port;
-	private int serverThreads = 10;
-	private int clientThreads = 10;
+	private int serverThreads = 50;
+	private int clientThreads = 50;
 
 	private NettyServer nettyServer;
 	private NettyClient nettyClient;

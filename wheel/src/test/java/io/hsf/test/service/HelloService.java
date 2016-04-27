@@ -4,6 +4,6 @@ public interface HelloService {
 
 	String hello(String name);
 	
-	void print(long a,String b);
+	long print(long a,String b);
 	
 }

@@ -6,8 +6,6 @@ import java.util.Map;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
@@ -17,6 +15,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.ClassUtils;
 
 import io.wheel.engine.RpcRequest;
+import io.wheel.engine.RpcResponse;
 import io.wheel.engine.ServiceInvoker;
 import io.wheel.utils.ClassHelper;
 
@@ -79,7 +78,8 @@ public class ServiceImporter
 		request.setServiceCode(serviceCode);
 		request.setArguments(invocation.getArguments());
 		request.setTimeout(getTimeout());
-		return serviceInvoker.invoke(request);
+		RpcResponse response = serviceInvoker.invoke(request);
+		return response.getResult();
 	}
 
 	public int getTimeout() {

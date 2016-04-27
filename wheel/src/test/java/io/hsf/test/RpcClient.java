@@ -1,5 +1,7 @@
 package io.hsf.test;
 
+import java.util.Date;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -11,7 +13,7 @@ public class RpcClient {
 	public static void main(String[] args) throws Exception {
 		ApplicationContext context = new ClassPathXmlApplicationContext("classpath:META-INF/spring/wheel-context.xml","classpath:clientContext.xml");
 		
-		testNetty(context);
+		testNetty2(context);
 //		testHttp(context);
 		
 	}
@@ -19,9 +21,10 @@ public class RpcClient {
 	private static void testNetty(ApplicationContext context){
 		HelloService helloService = context.getBean(HelloService.class);
 		long a = System.currentTimeMillis();
-		for(int i=0;i<100000;i++){
+		for(int i=0;i<10000;i++){
 			try{
-				helloService.print(i, "-88888");
+				helloService.hello("-88888");
+//				helloService.print(i,"-88888");
 //				Thread.sleep(1000);
 //				System.out.println("==============>" + i);
 			}catch(Exception e){
@@ -47,5 +50,27 @@ public class RpcClient {
 		}
 		long b = System.currentTimeMillis();
 		System.out.println(b-a);
+	}
+	
+	private static void testNetty2(ApplicationContext context){
+		final HelloService helloService = context.getBean(HelloService.class);
+		System.out.println("*******************>" + new Date());
+		for(int k=0;k<100;k++){
+			final int m = k;
+			new Thread(){
+				public void run() {
+					long a = System.currentTimeMillis();
+					for(int i=0;i<10000;i++){
+						long hh = helloService.print(i,"-88888");
+						if(hh!=i){
+							System.err.println("-----------------------============>"+i);
+						}
+					}
+					long b = System.currentTimeMillis();
+					System.out.println(m + "-->" + (b-a) + "===============>" + new Date());
+				};
+			}.start();
+			
+		}
 	}
 }

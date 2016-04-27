@@ -7,7 +7,7 @@ package io.wheel.config;
  * @since 2013-10-10
  * @version 1.0
  */
-public interface Initializable {
+public interface Initable {
 
 	/**
 	 * 初始化顺序

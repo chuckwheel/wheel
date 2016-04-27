@@ -60,23 +60,23 @@ public class Domain implements ApplicationContextAware, ApplicationListener<Appl
 	}
 
 	private void init() {
-		Map<String, Initializable> initializables = applicationContext.getBeansOfType(Initializable.class);
+		Map<String, Initable> initializables = applicationContext.getBeansOfType(Initable.class);
 		if (CollectionUtils.isEmpty(initializables)) {
 			logger.warn("Nothing to initialize!");
 			return;
 		}
-		List<Initializable> list = new ArrayList<Initializable>(initializables.values());
-		Collections.sort(list, new Comparator<Initializable>() {
+		List<Initable> list = new ArrayList<Initable>(initializables.values());
+		Collections.sort(list, new Comparator<Initable>() {
 			@Override
-			public int compare(Initializable o1, Initializable o2) {
+			public int compare(Initable o1, Initable o2) {
 				return o1.index() - o2.index();
 			}
 		});
-		for (Initializable initializable : list) {
+		for (Initable initializable : list) {
 			String index = StringUtils.leftPad(initializable.index() + "", 3, " ");
 			logger.warn("Pre-initing bean,index={},bean={}", index, initializable);
 		}
-		for (final Initializable initializable : list) {
+		for (final Initable initializable : list) {
 			try {
 				initializable.init();
 			} catch (Exception e) {

@@ -14,7 +14,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.CollectionUtils;
 
-import io.wheel.config.Initializable;
+import io.wheel.config.Initable;
 import io.wheel.utils.ClassHelper;
 
 /**
@@ -24,7 +24,7 @@ import io.wheel.utils.ClassHelper;
  * @since 2014-2-21
  * @version 1.0
  */
-public class DefaultServiceRepository implements ServiceRepository, Initializable, ApplicationContextAware {
+public class DefaultServiceRepository implements ServiceRepository, Initable, ApplicationContextAware {
 
 	private static Logger logger = LoggerFactory.getLogger(DefaultServiceRepository.class);
 

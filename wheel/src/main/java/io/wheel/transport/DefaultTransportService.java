@@ -10,9 +10,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.CollectionUtils;
 
-import io.wheel.config.Initializable;
+import io.wheel.config.Initable;
 
-public class DefaultTransportService implements TransportService, Initializable, ApplicationContextAware {
+public class DefaultTransportService implements TransportService, Initable, ApplicationContextAware {
 
 	private Logger logger = LoggerFactory.getLogger(DefaultTransportService.class);
 
