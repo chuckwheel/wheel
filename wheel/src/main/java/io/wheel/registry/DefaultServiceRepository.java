@@ -14,7 +14,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.CollectionUtils;
 
-import io.wheel.config.Initable;
+import io.wheel.engine.Initable;
 import io.wheel.utils.ClassHelper;
 
 /**

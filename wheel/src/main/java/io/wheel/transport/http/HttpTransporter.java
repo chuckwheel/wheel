@@ -8,7 +8,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import io.wheel.config.Initable;
+import io.wheel.engine.Initable;
 import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
 import io.wheel.engine.ServiceGateway;

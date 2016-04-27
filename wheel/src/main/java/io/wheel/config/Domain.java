@@ -21,6 +21,8 @@ import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.ContextStoppedEvent;
 import org.springframework.util.CollectionUtils;
 
+import io.wheel.engine.Initable;
+
 public class Domain implements ApplicationContextAware, ApplicationListener<ApplicationEvent> {
 
 	private Logger logger = LoggerFactory.getLogger(Domain.class);

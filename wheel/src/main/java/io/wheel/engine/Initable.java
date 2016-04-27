@@ -1,4 +1,4 @@
-package io.wheel.config;
+package io.wheel.engine;
 
 /**
  * 自定义初始化接口
