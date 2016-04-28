@@ -1,4 +1,4 @@
-package io.wheel.registry;
+package io.wheel.config;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
@@ -10,7 +10,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
  * @since 2014-2-21
  * @version 1.0
  */
-public class ServiceRegistry {
+public class Registry {
 
 	private String name = "master";
 

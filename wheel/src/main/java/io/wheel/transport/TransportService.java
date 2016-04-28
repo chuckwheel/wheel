@@ -6,5 +6,4 @@ public interface TransportService {
 
 	Transporter getTransporter(String name);
 	
-	Map<String, Transporter> getTransporters();
 }

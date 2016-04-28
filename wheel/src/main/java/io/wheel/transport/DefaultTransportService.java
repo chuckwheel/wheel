@@ -5,26 +5,19 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.util.CollectionUtils;
 
+import io.wheel.config.Domain;
+import io.wheel.config.Protocol;
 import io.wheel.engine.Initable;
 
-public class DefaultTransportService implements TransportService, Initable, ApplicationContextAware {
+public class DefaultTransportService implements TransportService, Initable {
 
 	private Logger logger = LoggerFactory.getLogger(DefaultTransportService.class);
 
 	private Map<String, Transporter> transporters = new HashMap<String, Transporter>();
 
-	private ApplicationContext applicationContext;
-
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
-	}
-
+	private Domain domain;
+	
 	@Override
 	public int index() {
 		return 0;
@@ -32,13 +25,11 @@ public class DefaultTransportService implements TransportService, Initable, Appl
 
 	@Override
 	public void init() throws Exception {
-		Map<String, Transporter> transporters = applicationContext.getBeansOfType(Transporter.class);
-		if (!CollectionUtils.isEmpty(transporters)) {
-			for (Transporter transporter : transporters.values()) {
-				this.transporters.put(transporter.getName(), transporter);
-				logger.warn("Register transporter,name={}", transporter.getName());
-			}
+		for (Protocol protocol : domain.getProtocols().values()) {
+			Transporter transporter = transporters.get(protocol.getName());
+			transporter.start(protocol);
 		}
+		logger.warn("");
 	}
 
 	public Transporter getTransporter(String name) {

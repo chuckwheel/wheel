@@ -16,9 +16,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class InvokeFuture<T> {
 
 	private T result;
+	
 	private Throwable cause;
+	
 	private Semaphore semaphore = new Semaphore(0);
+	
 	private AtomicBoolean done = new AtomicBoolean(false);
+	
 	private AtomicBoolean success = new AtomicBoolean(false);
 
 	public boolean isDone() {

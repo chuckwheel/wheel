@@ -23,6 +23,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
+import io.wheel.config.Protocol;
 import io.wheel.engine.RpcException;
 import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
@@ -39,26 +40,29 @@ public class NettyClient {
 
 	private static Logger logger = LoggerFactory.getLogger(NettyClient.class);
 
-	private Map<Long, InvokeFuture<RpcResponse>> futures = new ConcurrentHashMap<Long, InvokeFuture<RpcResponse>>();
-
-	private Map<String, Channel> channels = new ConcurrentHashMap<String, Channel>();
+	public static final String KEY_CLIENT_THREADS = "clientThreads";
+	
+	private Protocol protocol;
 
 	private EventLoopGroup clientGroup;
 
 	private Bootstrap clientBootstrap;
 
 	private AtomicLong invokeIds = new AtomicLong();
-
-	private NettyTransporter nettyTransport;
+	
+	private Map<String, Channel> channels = new ConcurrentHashMap<String, Channel>();
 
 	private AttributeKey<ServiceInstance<ServiceInfo>> targetKey = AttributeKey.valueOf("TARGET");
 
-	public NettyClient(NettyTransporter nettyTransport) {
-		this.nettyTransport = nettyTransport;
+	private Map<Long, InvokeFuture<RpcResponse>> futures = new ConcurrentHashMap<Long, InvokeFuture<RpcResponse>>();
+	
+	public NettyClient(Protocol protocol) {
+		this.protocol = protocol;
 	}
 
 	public void start() throws Exception {
-		clientGroup = new NioEventLoopGroup(nettyTransport.getClientThreads());
+		int clientThreads = protocol.getParameterValue(KEY_CLIENT_THREADS, Integer.class);
+		clientGroup = new NioEventLoopGroup(clientThreads);
 		clientBootstrap = new Bootstrap();
 		clientBootstrap.group(clientGroup);
 		clientBootstrap.channel(NioSocketChannel.class);
@@ -75,12 +79,12 @@ public class NettyClient {
 	private Channel getChannel(ServiceProvider<ServiceInfo> provider) throws Exception {
 		ServiceInstance<ServiceInfo> target = provider.getInstance();
 		ServiceInfo serviceInfo = target.getPayload();
-		String protocol = serviceInfo.getProtocol(nettyTransport.getName());
-		if (protocol == null) {
+		String p = serviceInfo.getProtocol(protocol.getName());
+		if (p == null) {
 			logger.error("");
 			throw new RpcException("");
 		}
-		String[] values = protocol.split(":");
+		String[] values = p.split(":");
 		String address = values[0];
 		int port = Integer.parseInt(values[1]);
 		String channelCode = address + ":" + port;

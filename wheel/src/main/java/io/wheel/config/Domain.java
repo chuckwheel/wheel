@@ -3,6 +3,7 @@ package io.wheel.config;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -37,6 +38,9 @@ public class Domain implements ApplicationContextAware, ApplicationListener<Appl
 
 	private int defaultTimeout = 5;
 
+	private Map<String, Registry> registrys = new HashMap<String, Registry>();
+	private Map<String, Protocol> protocols = new HashMap<String, Protocol>();
+
 	private ApplicationContext applicationContext;
 
 	private AtomicBoolean initialized = new AtomicBoolean(false);
@@ -62,6 +66,22 @@ public class Domain implements ApplicationContextAware, ApplicationListener<Appl
 	}
 
 	private void init() {
+		
+		Map<String, Registry> registrys = applicationContext.getBeansOfType(Registry.class);
+		if (!CollectionUtils.isEmpty(registrys)) {
+			for (Registry registry : registrys.values()) {
+				this.registrys.put(registry.getName(), registry);
+				logger.warn("Find registry,registry={}", registry);
+			}
+		}
+		Map<String, Protocol> protocols = applicationContext.getBeansOfType(Protocol.class);
+		if (!CollectionUtils.isEmpty(protocols)) {
+			for (Protocol protocol : protocols.values()) {
+				this.protocols.put(protocol.getName(), protocol);
+				logger.warn("Find protocol,protocol={}", protocol);
+			}
+		}
+		
 		Map<String, Initable> initializables = applicationContext.getBeansOfType(Initable.class);
 		if (CollectionUtils.isEmpty(initializables)) {
 			logger.warn("Nothing to initialize!");
@@ -131,6 +151,22 @@ public class Domain implements ApplicationContextAware, ApplicationListener<Appl
 
 	public void setDefaultTimeout(int defaultTimeout) {
 		this.defaultTimeout = defaultTimeout;
+	}
+
+	public Map<String, Registry> getRegistrys() {
+		return registrys;
+	}
+
+	public void setRegistrys(Map<String, Registry> registrys) {
+		this.registrys = registrys;
+	}
+
+	public Map<String, Protocol> getProtocols() {
+		return protocols;
+	}
+
+	public void setProtocols(Map<String, Protocol> protocols) {
+		this.protocols = protocols;
 	}
 
 }

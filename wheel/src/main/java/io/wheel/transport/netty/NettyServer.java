@@ -12,8 +12,10 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.wheel.config.Protocol;
 import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
+import io.wheel.engine.ServiceGateway;
 
 /**
  * 
@@ -26,18 +28,24 @@ public class NettyServer {
 
 	private static Logger logger = LoggerFactory.getLogger(NettyServer.class);
 
+	public static final String KEY_SERVER_THREADS = "serverThreads";
+	
+	private Protocol protocol;
+
 	private EventLoopGroup serverGroup;
 
 	private ServerBootstrap serverBootstrap;
 
-	private NettyTransporter nettyTransport;
+	private ServiceGateway serviceGateway;
 
-	public NettyServer(NettyTransporter nettyTransport) {
-		this.nettyTransport = nettyTransport;
+	public NettyServer(Protocol protocol, ServiceGateway serviceGateway) {
+		this.protocol = protocol;
+		this.serviceGateway = serviceGateway;
 	}
 
 	public void start() throws Exception {
-		serverGroup = new NioEventLoopGroup(nettyTransport.getServerThreads());
+		int serverThreads = protocol.getParameterValue(KEY_SERVER_THREADS, Integer.class);
+		serverGroup = new NioEventLoopGroup(serverThreads);
 		serverBootstrap = new ServerBootstrap();
 		serverBootstrap.group(serverGroup);
 		serverBootstrap.channel(NioServerSocketChannel.class);
@@ -48,12 +56,12 @@ public class NettyServer {
 				ch.pipeline().addLast(new ServerHandler());
 			}
 		});
-		if (StringUtils.isNotBlank(nettyTransport.getHost())) {
-			serverBootstrap.bind(nettyTransport.getHost(), nettyTransport.getPort()).sync();
+		if (StringUtils.isNotBlank(protocol.getHost())) {
+			serverBootstrap.bind(protocol.getHost(), protocol.getPort()).sync();
 		} else {
-			serverBootstrap.bind(nettyTransport.getPort()).sync();
+			serverBootstrap.bind(protocol.getPort()).sync();
 		}
-		logger.warn("Netty server started!prot={}", nettyTransport.getPort());
+		logger.warn("Netty server started!prot={}", protocol.getPort());
 	}
 
 	private class ServerHandler extends ChannelInboundHandlerAdapter {
@@ -67,9 +75,9 @@ public class NettyServer {
 			RpcRequest request = (RpcRequest) message;
 			RpcResponse response = null;
 			try {
-				response = nettyTransport.getServiceGateway().service(request);
+				response = serviceGateway.service(request);
 			} catch (Exception e) {
-				logger.warn("Process client failed! msgid={}", request.getInvokeId(), e);
+				logger.warn("Process client failed!invokeId={}", request.getInvokeId(), e);
 				throw e;
 			}
 			if (response != null) {

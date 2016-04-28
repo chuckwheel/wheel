@@ -8,8 +8,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -18,22 +16,16 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import com.caucho.hessian.io.HessianInput;
 import com.caucho.hessian.io.HessianOutput;
 
-import io.wheel.engine.ServiceGateway;
-import io.wheel.registry.DefaultServiceDiscovery;
 import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
+import io.wheel.engine.ServiceGateway;
 
 public class HttpGateway extends HttpServlet {
 
 	private static Logger logger = LoggerFactory.getLogger(HttpGateway.class);
-	/**
-	 * 序列号
-	 */
+
 	private static final long serialVersionUID = 7899257600641509254L;
 
-	/**
-	 * 到服务网关具体实现的引用
-	 */
 	private ServiceGateway serviceGateway;
 
 	public HttpGateway() {
@@ -44,9 +36,6 @@ public class HttpGateway extends HttpServlet {
 		this.serviceGateway = serviceGateway;
 	}
 
-	/**
-	 * 初始化
-	 */
 	@Override
 	public void init() throws ServletException {
 		if (serviceGateway == null) {
@@ -57,58 +46,25 @@ public class HttpGateway extends HttpServlet {
 		}
 	}
 
-	/**
-	 * 处理由get方法发起的服务请求
-	 * 
-	 * @param request
-	 *            请求消息
-	 * @param response
-	 *            应答消息
-	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		process(request, response);
 	}
 
-	/**
-	 * 处理由post方法发起的服务请求
-	 * 
-	 * @param request
-	 *            请求消息
-	 * @param response
-	 *            应答消息
-	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		process(request, response);
 	}
 
-	/**
-	 * 对Http格式的服务请求的处理
-	 * 
-	 * @param request
-	 *            请求消息
-	 * @param response
-	 *            应答消息
-	 * @throws IOException
-	 */
 	protected void process(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
-
-			// 构造服务请求
 			RpcRequest rpcRequest = this.toRpcRequest(request);
-
-			// 调用服务网关
 			RpcResponse result = serviceGateway.service(rpcRequest);
-
-			// 发送结果
 			if (result != null) {
 				this.writeHttpResponse(result, response);
 			}
-			// 刷新缓存
 			response.flushBuffer();
 		} catch (Exception e) {
-			// 打印异常
 			logger.error("Process http request error!", e);
 			// 异常抛出，由通讯协议框架处理
 			// throw e;

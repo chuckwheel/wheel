@@ -1,111 +1,53 @@
 package io.wheel.transport.http;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.curator.x.discovery.ServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
-import io.wheel.engine.Initable;
+import io.wheel.config.Protocol;
 import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
 import io.wheel.engine.ServiceGateway;
 import io.wheel.registry.ServiceInfo;
 import io.wheel.transport.Transporter;
 
-public class HttpTransporter implements Transporter, Initable, ApplicationContextAware {
+public class HttpTransporter implements Transporter {
 
 	private static Logger logger = LoggerFactory.getLogger(HttpTransporter.class);
 
-	private String name = "http";
-	private String host;
-	private int port;
-	private String path = "wheel";
+	public static final String KEY_SERVICE_PATH = "servicePath";
+	
+	public static final String DEFAULT_SERVICE_PATH = "/wheel";
+	
+	private final String NAME = "http";
 
 	private HttpServer httpServer;
-	private HttpConnector httpConnector;
+
+	private HttpClient httpClient;
+
 	private ServiceGateway serviceGateway;
-
-	private ApplicationContext applicationContext;
-
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
-	}
-
-	@Override
-	public int index() {
-		return 3;
-	}
-
-	@Override
-	public void init() throws Exception {
-		if (serviceGateway == null) {
-			serviceGateway = this.applicationContext.getBean(ServiceGateway.class);
-		}
-		if (this.port != 0) {
-			this.httpServer = new HttpServer(this);
-			this.httpServer.start();
-		}
-		{
-			this.httpConnector = new HttpConnector(this);
-			this.httpConnector.start();
-		}
-	}
 
 	@Override
 	public String getName() {
-		return name;
+		return NAME;
 	}
 
 	@Override
-	public String getUrl(String defaultAddress) {
-		String address = "";
-		if (StringUtils.isBlank(host) || StringUtils.equals(host, "0.0.0.0")) {
-			address = defaultAddress;
-		} else {
-			address = host;
+	public void start(Protocol protocol) throws Exception {
+		{
+			this.httpClient = new HttpClient(protocol);
+			this.httpClient.start();
 		}
-		return name + "://" + address + ":" + port + "/" + path;
+		if (protocol.getPort() != 0) {
+			this.httpServer = new HttpServer(protocol, serviceGateway);
+			this.httpServer.start();
+		}
+		logger.warn("Start http transporter!protocol={}", protocol);
 	}
 
 	@Override
 	public RpcResponse invoke(ServiceProvider<ServiceInfo> provider, RpcRequest request) {
-		return httpConnector.invoke(provider, request);
-	}
-
-	public String getHost() {
-		return host;
-	}
-
-	public void setHost(String host) {
-		this.host = host;
-	}
-
-	public int getPort() {
-		return port;
-	}
-
-	public void setPort(int port) {
-		this.port = port;
-	}
-
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
-	}
-
-	public ServiceGateway getServiceGateway() {
-		return serviceGateway;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+		return httpClient.invoke(provider, request);
 	}
 
 	public void setServiceGateway(ServiceGateway serviceGateway) {

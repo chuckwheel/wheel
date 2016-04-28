@@ -2,9 +2,9 @@ package io.wheel.transport.http;
 
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.apache.curator.x.discovery.ServiceProvider;
-import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentProvider;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.client.api.Request;
@@ -12,27 +12,34 @@ import org.eclipse.jetty.client.util.BytesContentProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.wheel.config.Protocol;
 import io.wheel.engine.RpcException;
 import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
 import io.wheel.registry.ServiceInfo;
 import io.wheel.utils.HessianUtils;
 
-public class HttpConnector {
+public class HttpClient {
 
 	// 日志常量
-	private static Logger logger = LoggerFactory.getLogger(HttpConnector.class);
+	private static Logger logger = LoggerFactory.getLogger(HttpClient.class);
 
-	private HttpClient httpClient;
+	private org.eclipse.jetty.client.HttpClient httpClient;
 
-	private HttpTransporter httpTransporter;
+	private Protocol protocol;
 
-	public HttpConnector(HttpTransporter httpTransporter) {
-		this.httpTransporter = httpTransporter;
+	private String servicePath;
+
+	public HttpClient(Protocol protocol) {
+		this.protocol = protocol;
+		servicePath = protocol.getParameterValue(HttpTransporter.KEY_SERVICE_PATH, String.class);
+		if (StringUtils.isBlank(servicePath)) {
+			servicePath = HttpTransporter.DEFAULT_SERVICE_PATH;
+		}
 	}
 
 	public void start() throws Exception {
-		httpClient = new HttpClient();
+		httpClient = new org.eclipse.jetty.client.HttpClient();
 		httpClient.setMaxConnectionsPerDestination(200);
 		httpClient.setConnectTimeout(500);
 		httpClient.start();
@@ -41,7 +48,7 @@ public class HttpConnector {
 	private String getUrl(ServiceProvider<ServiceInfo> provider) throws Exception {
 		ServiceInstance<ServiceInfo> target = provider.getInstance();
 		ServiceInfo serviceInfo = target.getPayload();
-		return serviceInfo.getProtocol(httpTransporter.getName());
+		return serviceInfo.getProtocol(protocol.getName()) + servicePath;
 	}
 
 	public RpcResponse invoke(ServiceProvider<ServiceInfo> provider, RpcRequest request) {
@@ -58,7 +65,7 @@ public class HttpConnector {
 			}
 			int resultCode = response.getStatus();
 			if (resultCode != 200) {
-				logger.error("Send and Receive http request failed! resultCode=" + resultCode);
+				logger.error("Send and Receive http request failed! resultCode{}", resultCode);
 				throw new RpcException();
 			}
 			return this.toRpcResponse(response);
@@ -76,4 +83,5 @@ public class HttpConnector {
 		byte[] bytes = HessianUtils.objectToBytes(request);
 		return new BytesContentProvider(bytes);
 	}
+
 }

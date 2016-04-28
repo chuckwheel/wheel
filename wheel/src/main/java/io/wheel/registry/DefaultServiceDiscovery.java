@@ -23,14 +23,12 @@ import org.apache.curator.x.discovery.details.JsonInstanceSerializer;
 import org.apache.curator.x.discovery.strategies.RandomStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.CollectionUtils;
 
+import io.wheel.config.Domain;
+import io.wheel.config.Protocol;
+import io.wheel.config.Registry;
 import io.wheel.engine.Initable;
-import io.wheel.transport.TransportService;
-import io.wheel.transport.Transporter;
 
 /**
  * The default DefaultServiceDiscovery implement
@@ -39,8 +37,7 @@ import io.wheel.transport.Transporter;
  * @since 2014-2-21
  * @version 1.0
  */
-public class DefaultServiceDiscovery
-		implements io.wheel.registry.ServiceDiscovery, Initable, ApplicationContextAware {
+public class DefaultServiceDiscovery implements io.wheel.registry.ServiceDiscovery, Initable {
 
 	private static Logger logger = LoggerFactory.getLogger(DefaultServiceDiscovery.class);
 
@@ -48,15 +45,11 @@ public class DefaultServiceDiscovery
 
 	private JsonInstanceSerializer<ServiceInfo> serializer = new JsonInstanceSerializer<ServiceInfo>(ServiceInfo.class);
 
-	private Map<String, ServiceRegistry> serviceRegistrys = new HashMap<String, ServiceRegistry>();
-
 	private Map<String, ServiceProvider<ServiceInfo>> serviceProviders = new HashMap<String, ServiceProvider<ServiceInfo>>();
 
+	private Domain domain;
+
 	private ServiceRepository serviceRepository;
-
-	private TransportService transportService;
-
-	private ApplicationContext applicationContext;
 
 	@Override
 	public int index() {
@@ -65,42 +58,29 @@ public class DefaultServiceDiscovery
 
 	@Override
 	public void init() throws Exception {
-		this.initRegistry();
-		if (CollectionUtils.isEmpty(serviceRegistrys)) {
-			logger.warn("Service registory is empyt!");
-			return;
-		}
-		this.initService();
-	}
+		if (CollectionUtils.isEmpty(domain.getRegistrys())) {
+			for (Registry registry : domain.getRegistrys().values()) {
 
-	private void initRegistry() throws Exception {
-		Map<String, ServiceRegistry> serviceRegistrys = applicationContext.getBeansOfType(ServiceRegistry.class);
-		if (!CollectionUtils.isEmpty(serviceRegistrys)) {
-			for (ServiceRegistry registry : serviceRegistrys.values()) {
-				this.serviceRegistrys.put(registry.getName(), registry);
-				logger.warn("Find registry,registry={}", registry);
+				RetryPolicy retryPolicy = new ExponentialBackoffRetry(registry.getSleepTimeMs(),
+						registry.getMaxRetries());
+				CuratorFramework client = CuratorFrameworkFactory.newClient(registry.getAddress(), retryPolicy);
+				client.start();
+
+				ServiceDiscoveryBuilder<ServiceInfo> builder = ServiceDiscoveryBuilder.builder(ServiceInfo.class);
+				builder.client(client);
+				builder.basePath(registry.getPath());
+				builder.serializer(serializer);
+				ServiceDiscovery<ServiceInfo> serviceDiscovery = builder.build();
+				serviceDiscovery.start();
+
+				this.registerService(registry.getName(), serviceDiscovery);
+				this.initServiceProvider(registry.getName(), serviceDiscovery);
+
+				logger.warn("Start service registory!registry={}", registry);
 			}
-		}
-	}
+		} else {
+			logger.warn("Service registory is empyt!");
 
-	private void initService() throws Exception {
-		for (ServiceRegistry registry : serviceRegistrys.values()) {
-
-			RetryPolicy retryPolicy = new ExponentialBackoffRetry(registry.getSleepTimeMs(), registry.getMaxRetries());
-			CuratorFramework client = CuratorFrameworkFactory.newClient(registry.getAddress(), retryPolicy);
-			client.start();
-
-			ServiceDiscoveryBuilder<ServiceInfo> builder = ServiceDiscoveryBuilder.builder(ServiceInfo.class);
-			builder.client(client);
-			builder.basePath(registry.getPath());
-			builder.serializer(serializer);
-			ServiceDiscovery<ServiceInfo> serviceDiscovery = builder.build();
-			serviceDiscovery.start();
-
-			this.registerService(registry.getName(), serviceDiscovery);
-			this.initServiceProvider(registry.getName(), serviceDiscovery);
-
-			logger.warn("Start service registory!registry={}", registry);
 		}
 	}
 
@@ -147,28 +127,36 @@ public class DefaultServiceDiscovery
 	}
 
 	private Map<String, String> getProtocols(ServiceExp serviceExp) throws Exception {
-		String localAddress = null;
-		Collection<InetAddress> ips = ServiceInstanceBuilder.getAllLocalIPs();
-		if (ips.size() > 0) {
-			localAddress = ips.iterator().next().getHostAddress();
-		}
-		Map<String, String> protocols = new HashMap<String, String>();
-		String protocol = serviceExp.getProtocol();
-		Map<String, Transporter> transporters = transportService.getTransporters();
-		if (StringUtils.isBlank(protocol) || StringUtils.equals(protocol, "*")) {
-			for (Transporter t : transporters.values()) {
-				protocols.put(t.getName(), t.getUrl(localAddress));
+
+		Map<String, String> result = new HashMap<String, String>();
+		String protocols = serviceExp.getProtocol();
+		if (StringUtils.isBlank(protocols) || StringUtils.equals(protocols, "*")) {
+			for (Protocol p : domain.getProtocols().values()) {
+				result.put(p.getName(), this.getUrl(p));
 			}
-			return protocols;
+			return result;
 		}
-		for (String p : protocol.split(",")) {
-			Transporter t = transporters.get(p);
-			if (t == null) {
+		for (String protocol : protocols.split(",")) {
+			Protocol p = domain.getProtocols().get(protocol);
+			if (p == null) {
 				continue;
 			}
-			protocols.put(t.getName(), t.getUrl(localAddress));
+			result.put(p.getName(), this.getUrl(p));
 		}
-		return protocols;
+		return result;
+	}
+
+	private String getUrl(Protocol protocol) throws Exception {
+		String localAddress = null;
+		if (StringUtils.isBlank(protocol.getHost()) || StringUtils.equals(protocol.getHost(), "0.0.0.0")) {
+			Collection<InetAddress> ips = ServiceInstanceBuilder.getAllLocalIPs();
+			if (ips.size() > 0) {
+				localAddress = ips.iterator().next().getHostAddress();
+			}
+		} else {
+			localAddress = protocol.getHost();
+		}
+		return protocol.getName() + ":" + localAddress + ":" + protocol.getPort();
 	}
 
 	@Override
@@ -185,16 +173,4 @@ public class DefaultServiceDiscovery
 		this.serviceRepository = serviceRepository;
 	}
 
-	public void setServiceRegistrys(Map<String, ServiceRegistry> serviceRegistrys) {
-		this.serviceRegistrys = serviceRegistrys;
-	}
-
-	public void setTransportService(TransportService transportService) {
-		this.transportService = transportService;
-	}
-
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
-	}
 }
