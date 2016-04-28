@@ -28,8 +28,6 @@ public class NettyServer {
 
 	private static Logger logger = LoggerFactory.getLogger(NettyServer.class);
 
-	public static final String KEY_SERVER_THREADS = "serverThreads";
-	
 	private Protocol protocol;
 
 	private EventLoopGroup serverGroup;
@@ -44,7 +42,7 @@ public class NettyServer {
 	}
 
 	public void start() throws Exception {
-		int serverThreads = protocol.getParameterValue(KEY_SERVER_THREADS, Integer.class);
+		int serverThreads = protocol.getParameterValue(NettyParameter.SERVER_THREADS);
 		serverGroup = new NioEventLoopGroup(serverThreads);
 		serverBootstrap = new ServerBootstrap();
 		serverBootstrap.group(serverGroup);

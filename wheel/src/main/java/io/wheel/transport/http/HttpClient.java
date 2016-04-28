@@ -2,7 +2,6 @@ package io.wheel.transport.http;
 
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.curator.x.discovery.ServiceInstance;
 import org.apache.curator.x.discovery.ServiceProvider;
 import org.eclipse.jetty.client.api.ContentProvider;
@@ -21,7 +20,6 @@ import io.wheel.utils.HessianUtils;
 
 public class HttpClient {
 
-	// 日志常量
 	private static Logger logger = LoggerFactory.getLogger(HttpClient.class);
 
 	private org.eclipse.jetty.client.HttpClient httpClient;
@@ -32,16 +30,15 @@ public class HttpClient {
 
 	public HttpClient(Protocol protocol) {
 		this.protocol = protocol;
-		servicePath = protocol.getParameterValue(HttpTransporter.KEY_SERVICE_PATH, String.class);
-		if (StringUtils.isBlank(servicePath)) {
-			servicePath = HttpTransporter.DEFAULT_SERVICE_PATH;
-		}
+		this.servicePath = protocol.getParameterValue(HttpParameter.SERVICE_PATH);
 	}
 
 	public void start() throws Exception {
 		httpClient = new org.eclipse.jetty.client.HttpClient();
-		httpClient.setMaxConnectionsPerDestination(200);
-		httpClient.setConnectTimeout(500);
+		int maxConnections = protocol.getParameterValue(HttpParameter.MAX_CONNECTIONS);
+		httpClient.setMaxConnectionsPerDestination(maxConnections);
+		int connectTimeout = protocol.getParameterValue(HttpParameter.CONNECT_TIMEOUT);
+		httpClient.setConnectTimeout(connectTimeout);
 		httpClient.start();
 	}
 

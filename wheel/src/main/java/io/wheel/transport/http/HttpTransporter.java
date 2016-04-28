@@ -15,10 +15,6 @@ public class HttpTransporter implements Transporter {
 
 	private static Logger logger = LoggerFactory.getLogger(HttpTransporter.class);
 
-	public static final String KEY_SERVICE_PATH = "servicePath";
-	
-	public static final String DEFAULT_SERVICE_PATH = "/wheel";
-	
 	private final String NAME = "http";
 
 	private HttpServer httpServer;

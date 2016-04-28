@@ -40,8 +40,6 @@ public class NettyClient {
 
 	private static Logger logger = LoggerFactory.getLogger(NettyClient.class);
 
-	public static final String KEY_CLIENT_THREADS = "clientThreads";
-	
 	private Protocol protocol;
 
 	private EventLoopGroup clientGroup;
@@ -61,7 +59,7 @@ public class NettyClient {
 	}
 
 	public void start() throws Exception {
-		int clientThreads = protocol.getParameterValue(KEY_CLIENT_THREADS, Integer.class);
+		int clientThreads = protocol.getParameterValue(NettyParameter.CLIENT_THREADS);
 		clientGroup = new NioEventLoopGroup(clientThreads);
 		clientBootstrap = new Bootstrap();
 		clientBootstrap.group(clientGroup);

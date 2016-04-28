@@ -1,6 +1,5 @@
 package io.wheel.transport.http;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -28,10 +27,7 @@ public class HttpServer {
 		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
 		context.setContextPath("/");
 		server.setHandler(context);
-		String servicePath = protocol.getParameterValue(HttpTransporter.KEY_SERVICE_PATH, String.class);
-		if(StringUtils.isBlank(servicePath)){
-			servicePath = HttpTransporter.DEFAULT_SERVICE_PATH;
-		}
+		String servicePath = protocol.getParameterValue(HttpParameter.SERVICE_PATH);
 		context.addServlet(new ServletHolder(new HttpGateway(serviceGateway)), servicePath);
 		logger.info("Http server start!port={}", protocol.getPort());
 		server.start();

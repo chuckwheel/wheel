@@ -77,15 +77,20 @@ public class Protocol {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T getParameterValue(String key, Class<T> clazz) {
+	public <T> T getParameterValue(Parameter parameter) {
+		String key = parameter.getKey();
+		Class<?> type = parameter.getType();
 		String value = parameterValues.get(key);
-		if (clazz.equals(String.class)) {
+		if (StringUtils.isBlank(value)) {
+			return (T) parameter.getDefaultValue();
+		}
+		if (type.equals(String.class)) {
 			return (T) value;
-		} else if (clazz.equals(Long.class)) {
+		} else if (type.equals(Long.class)) {
 			return (T) new Long(value);
-		} else if (clazz.equals(Integer.class)) {
+		} else if (type.equals(Integer.class)) {
 			return (T) new Integer(value);
-		} else if (clazz.equals(Boolean.class)) {
+		} else if (type.equals(Boolean.class)) {
 			return (T) new Boolean(value);
 		} else {
 			return (T) value;
