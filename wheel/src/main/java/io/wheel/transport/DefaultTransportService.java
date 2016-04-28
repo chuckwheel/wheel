@@ -29,15 +29,11 @@ public class DefaultTransportService implements TransportService, Initable {
 			Transporter transporter = transporters.get(protocol.getName());
 			transporter.start(protocol);
 		}
-		logger.warn("");
+		logger.warn("Init TransportService!");
 	}
 
 	public Transporter getTransporter(String name) {
 		return transporters.get(name);
-	}
-
-	public Map<String, Transporter> getTransporters() {
-		return transporters;
 	}
 
 	public void setTransporters(Map<String, Transporter> transporters) {

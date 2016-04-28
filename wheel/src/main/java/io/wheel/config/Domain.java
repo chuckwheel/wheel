@@ -39,6 +39,7 @@ public class Domain implements ApplicationContextAware, ApplicationListener<Appl
 	private int defaultTimeout = 5;
 
 	private Map<String, Registry> registrys = new HashMap<String, Registry>();
+	
 	private Map<String, Protocol> protocols = new HashMap<String, Protocol>();
 
 	private ApplicationContext applicationContext;
