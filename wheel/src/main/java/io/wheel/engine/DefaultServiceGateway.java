@@ -74,6 +74,10 @@ public class DefaultServiceGateway implements ServiceGateway {
 		return timeout;
 	}
 
+	public void setDomain(Domain domain) {
+		this.domain = domain;
+	}
+	
 	public void setServiceExecutor(ServiceExecutor serviceExecutor) {
 		this.serviceExecutor = serviceExecutor;
 	}

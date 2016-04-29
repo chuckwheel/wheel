@@ -25,8 +25,8 @@ public class RpcClient {
 			try{
 				helloService.hello("-88888");
 //				helloService.print(i,"-88888");
-//				Thread.sleep(1000);
-//				System.out.println("==============>" + i);
+				Thread.sleep(1000);
+				System.out.println("==============>" + i);
 			}catch(Exception e){
 				e.printStackTrace();
 				System.out.println("------->" + i);

@@ -17,7 +17,7 @@ public class DefaultTransportService implements TransportService, Initable {
 	private Map<String, Transporter> transporters = new HashMap<String, Transporter>();
 
 	private Domain domain;
-	
+
 	@Override
 	public int index() {
 		return 0;
@@ -34,6 +34,10 @@ public class DefaultTransportService implements TransportService, Initable {
 
 	public Transporter getTransporter(String name) {
 		return transporters.get(name);
+	}
+
+	public void setDomain(Domain domain) {
+		this.domain = domain;
 	}
 
 	public void setTransporters(Map<String, Transporter> transporters) {

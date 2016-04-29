@@ -58,7 +58,7 @@ public class DefaultServiceDiscovery implements io.wheel.registry.ServiceDiscove
 
 	@Override
 	public void init() throws Exception {
-		if (CollectionUtils.isEmpty(domain.getRegistrys())) {
+		if (!CollectionUtils.isEmpty(domain.getRegistrys())) {
 			for (Registry registry : domain.getRegistrys().values()) {
 
 				RetryPolicy retryPolicy = new ExponentialBackoffRetry(registry.getSleepTimeMs(),
@@ -156,7 +156,7 @@ public class DefaultServiceDiscovery implements io.wheel.registry.ServiceDiscove
 		} else {
 			localAddress = protocol.getHost();
 		}
-		return protocol.getName() + ":" + localAddress + ":" + protocol.getPort();
+		return localAddress + ":" + protocol.getPort();
 	}
 
 	@Override
@@ -173,4 +173,7 @@ public class DefaultServiceDiscovery implements io.wheel.registry.ServiceDiscove
 		this.serviceRepository = serviceRepository;
 	}
 
+	public void setDomain(Domain domain) {
+		this.domain = domain;
+	}
 }

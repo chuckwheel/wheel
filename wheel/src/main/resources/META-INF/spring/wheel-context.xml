@@ -11,9 +11,26 @@
 	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 	
-	<bean id="transportService" class="io.wheel.transport.DefaultTransportService" />
+	<bean id="transportService" class="io.wheel.transport.DefaultTransportService">
+		<property name="domain" ref="domain"/>
+		<property name="transporters">
+			<map>
+				<entry key="netty" value-ref="nettyTransporter"/>
+				<entry key="http" value-ref="httpTransporter"/>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="nettyTransporter" class="io.wheel.transport.netty.NettyTransporter">
+		<property name="serviceGateway" ref="serviceGateway"/>
+	</bean>
+	
+	<bean id="httpTransporter" class="io.wheel.transport.http.HttpTransporter" >
+		<property name="serviceGateway" ref="serviceGateway"/>
+	</bean>
 	
 	<bean id="serviceGateway" class="io.wheel.engine.DefaultServiceGateway">
+		<property name="domain" ref="domain"/>
 		<property name="serviceExecutor" ref="serviceExecutor"/>
 		<property name="serviceRepository" ref="serviceRepository"/>
 		<property name="coreThreadPool" ref="coreThreadPool"/>
@@ -31,8 +48,8 @@
 	<bean id="serviceRepository" class="io.wheel.registry.DefaultServiceRepository" />
 	
 	<bean id="serviceDiscovery" class="io.wheel.registry.DefaultServiceDiscovery">
+		<property name="domain" ref="domain"/>
 		<property name="serviceRepository" ref="serviceRepository"/>
-		<property name="transportService" ref="transportService"/>
 	</bean>
 	
     <bean id="serviceInvoker" class="io.wheel.engine.DefaultServiceInvoker">
