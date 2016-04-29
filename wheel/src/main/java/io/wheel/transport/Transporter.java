@@ -9,7 +9,7 @@ import io.wheel.registry.ServiceInfo;
 
 public interface Transporter {
 
-	String getName();
+	//String getName();
 	
 	void start(Protocol protocol) throws Exception;
 

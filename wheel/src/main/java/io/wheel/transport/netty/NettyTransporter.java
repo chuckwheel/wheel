@@ -16,7 +16,7 @@ public class NettyTransporter implements Transporter {
 
 	private static Logger logger = LoggerFactory.getLogger(HttpTransporter.class);
 
-	private final String NAME = "netty";
+//	private final String NAME = "netty";
 
 	private NettyServer nettyServer;
 
@@ -37,10 +37,10 @@ public class NettyTransporter implements Transporter {
 		logger.warn("Start netty transporter!protocol={}", protocol);
 	}
 
-	@Override
-	public String getName() {
-		return NAME;
-	}
+//	@Override
+//	public String getName() {
+//		return NAME;
+//	}
 
 	@Override
 	public RpcResponse invoke(ServiceProvider<ServiceInfo> provider, RpcRequest request) {

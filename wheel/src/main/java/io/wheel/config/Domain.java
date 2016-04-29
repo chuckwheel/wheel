@@ -72,14 +72,14 @@ public class Domain implements ApplicationContextAware, ApplicationListener<Appl
 		if (!CollectionUtils.isEmpty(registrys)) {
 			for (Registry registry : registrys.values()) {
 				this.registrys.put(registry.getName(), registry);
-				logger.warn("Find registry,registry={}", registry);
+				logger.warn(registry.toString());
 			}
 		}
 		Map<String, Protocol> protocols = applicationContext.getBeansOfType(Protocol.class);
 		if (!CollectionUtils.isEmpty(protocols)) {
 			for (Protocol protocol : protocols.values()) {
 				this.protocols.put(protocol.getName(), protocol);
-				logger.warn("Find protocol,protocol={}", protocol);
+				logger.warn(protocol.toString());
 			}
 		}
 		

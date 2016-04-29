@@ -32,7 +32,8 @@ public class DefaultServiceInvoker implements ServiceInvoker{
 		RpcResponse response = null;
 		try {
 			String registry = serviceImp.getRegistry();
-			ServiceProvider<ServiceInfo> provider = serviceDiscovery.getServiceProvider(registry,serviceImp.getServiceGroup());
+			String serviceGroup = serviceImp.getServiceGroup();
+			ServiceProvider<ServiceInfo> provider = serviceDiscovery.getServiceProvider(registry,serviceGroup);
 			Transporter transporter = transportService.getTransporter(serviceImp.getProtocol());
 			response = transporter.invoke(provider,request);
 		} catch (Exception e) {

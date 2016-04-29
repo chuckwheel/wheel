@@ -12,9 +12,11 @@
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 	
 	<!-- ===================================================== -->
-	<bean class="io.wheel.config.Domain" p:appId="provider" p:nodeId="provider-2"/>
-	<bean class="io.wheel.transport.netty.NettyTransporter" p:port="9989" />
-	<bean class="io.wheel.registry.ServiceRegistry" p:address="127.0.0.1:2181"/>
+	<bean id="domain" class="io.wheel.config.Domain" p:appId="provider" p:nodeId="provider-2"/>
+	<bean class="io.wheel.config.Registry" p:name="master" p:address="127.0.0.1:2181"/>
+	<bean class="io.wheel.config.Registry" p:name="slave" p:address="127.0.0.1:2181"/>
+	<bean class="io.wheel.config.Protocol" p:name="netty" p:port="9988"/>
+	<bean class="io.wheel.config.Protocol" p:name="http" p:port="8080"/>
 	
 	<!-- ===================================================== -->
     <bean id="helloService" class="io.hsf.test.service.impl.HelloServiceImpl">

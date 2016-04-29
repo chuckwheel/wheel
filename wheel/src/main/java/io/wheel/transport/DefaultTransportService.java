@@ -20,14 +20,18 @@ public class DefaultTransportService implements TransportService, Initable {
 
 	@Override
 	public int index() {
-		return 0;
+		return 2;
 	}
 
 	@Override
 	public void init() throws Exception {
 		for (Protocol protocol : domain.getProtocols().values()) {
 			Transporter transporter = transporters.get(protocol.getName());
-			transporter.start(protocol);
+			if (transporter != null) {
+				transporter.start(protocol);
+			} else {
+				logger.warn("Transporter not found!protocol={}", protocol);
+			}
 		}
 		logger.warn("Init TransportService!");
 	}
