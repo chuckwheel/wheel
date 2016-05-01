@@ -128,7 +128,7 @@ public class NettyClient {
 			return result;
 		} catch (Exception e) {
 			provider.noteError(channel.attr(targetKey).get());
-			logger.error("Send and receive failed! ServerId:", e);
+			logger.error("Send and receive failed! invokeId={}",invokeId, e);
 			throw new RpcException("", e);
 		}
 	}
@@ -136,6 +136,7 @@ public class NettyClient {
 	private class ClientHandler extends ChannelInboundHandlerAdapter {
 
 		public void channelRead(ChannelHandlerContext ctx, Object message) throws Exception {
+			
 			if (message == null) {
 				logger.warn("Received message is null!");
 				return;

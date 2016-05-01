@@ -15,18 +15,11 @@ public class HttpTransporter implements Transporter {
 
 	private static Logger logger = LoggerFactory.getLogger(HttpTransporter.class);
 
-//	private final String NAME = "http";
-
 	private HttpServer httpServer;
 
 	private HttpClient httpClient;
 
 	private ServiceGateway serviceGateway;
-
-//	@Override
-//	public String getName() {
-//		return NAME;
-//	}
 
 	@Override
 	public void start(Protocol protocol) throws Exception {

@@ -22,7 +22,10 @@ public class DefaultServiceExecutor implements ServiceExecutor {
 
 	@Override
 	public RpcResponse execute(ServiceExp serviceExp, RpcRequest request) throws Exception {
+		ServiceContext serviceContext = ServiceContext.get();
+		serviceContext.setRequest(request);
 		RpcResponse response = new RpcResponse();
+		serviceContext.setResponse(response);
 		try {
 			Object obj = serviceExp.getTargetObject();
 			Object[] args = request.getArguments();
@@ -38,7 +41,7 @@ public class DefaultServiceExecutor implements ServiceExecutor {
 			response.setSuccess(false);
 			throw (Exception) cause;
 		} finally {
-
+			ServiceContext.remove();
 		}
 	}
 

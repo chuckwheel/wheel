@@ -73,6 +73,7 @@ public class NettyServer {
 			RpcRequest request = (RpcRequest) message;
 			RpcResponse response = null;
 			try {
+				logger.warn("%%%%%%%%%%%%%%%%%%%%" + request.getInvokeId());
 				response = serviceGateway.service(request);
 			} catch (Exception e) {
 				logger.warn("Process client failed!invokeId={}", request.getInvokeId(), e);

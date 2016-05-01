@@ -56,6 +56,7 @@
     	<property name="transportService" ref="transportService"/>
     	<property name="serviceDiscovery" ref="serviceDiscovery"/>
     	<property name="serviceRepository" ref="serviceRepository"/>
+    	<!-- <property name="coreThreadPool" ref="coreThreadPool"/> -->
     </bean>
 	
 </beans>

@@ -9,10 +9,8 @@ import io.wheel.registry.ServiceInfo;
 
 public interface Transporter {
 
-	//String getName();
-	
 	void start(Protocol protocol) throws Exception;
 
-	RpcResponse invoke(ServiceProvider<ServiceInfo> provider,RpcRequest request);
-	
+	RpcResponse invoke(ServiceProvider<ServiceInfo> provider, RpcRequest request);
+
 }

@@ -3,17 +3,24 @@ package io.wheel.registry;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.CollectionUtils;
 
+import io.wheel.engine.RpcContext;
 import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
 import io.wheel.engine.ServiceInvoker;
@@ -22,7 +29,7 @@ import io.wheel.utils.ClassHelper;
 public class ServiceImporter
 		implements MethodInterceptor, FactoryBean<Object>, InitializingBean, ApplicationContextAware {
 
-	//private static Logger logger = LoggerFactory.getLogger(ServiceImporter.class);
+	private static Logger logger = LoggerFactory.getLogger(ServiceImporter.class);
 
 	private int timeout = 5;
 
@@ -38,6 +45,8 @@ public class ServiceImporter
 
 	private ServiceInvoker serviceInvoker;
 
+	private ThreadPoolTaskExecutor asyncThreadPool;
+
 	private Map<String, MethodConfig> methods = new HashMap<String, MethodConfig>();
 
 	@Override
@@ -48,7 +57,12 @@ public class ServiceImporter
 	public void afterPropertiesSet() {
 		ProxyFactory proxy = new ProxyFactory(serviceInterface, this);
 		this.serviceProxy = proxy.getProxy(ClassUtils.getDefaultClassLoader());
-		serviceInvoker = applicationContext.getBean(ServiceInvoker.class);
+		if (serviceInvoker == null) {
+			serviceInvoker = applicationContext.getBean(ServiceInvoker.class);
+		}
+		if (asyncThreadPool == null) {
+			asyncThreadPool = applicationContext.getBean("coreThreadPool", ThreadPoolTaskExecutor.class);
+		}
 	}
 
 	@Override
@@ -72,14 +86,55 @@ public class ServiceImporter
 
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
-		Method method = invocation.getMethod();
-		String serviceCode = ClassHelper.getMethodFullName(method);
-		RpcRequest request = new RpcRequest();
-		request.setServiceCode(serviceCode);
-		request.setArguments(invocation.getArguments());
-		request.setTimeout(getTimeout());
+		RpcContext rpcContext = RpcContext.get();
+		rpcContext.setFuture(null);
+		rpcContext.setResponse(null);
+		try {
+			Method method = invocation.getMethod();
+			String serviceCode = ClassHelper.getMethodFullName(method);
+			RpcRequest request = new RpcRequest();
+			request.setServiceCode(serviceCode);
+			request.setArguments(invocation.getArguments());
+			request.setTimeout(getTimeout());
+			this.setAttributes(request, rpcContext);
+			return rpcContext.isAsync() ? this.acall(request) : this.call(request);
+		} finally {
+			rpcContext.setAsync(false);
+			rpcContext.clearAttributes();
+		}
+	}
+
+	private void setAttributes(RpcRequest request, RpcContext rpcContext) {
+		Map<String, Object> attributes = rpcContext.getAttributes();
+		if (!CollectionUtils.isEmpty(attributes)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Set attributes to RpcRequest,attributes={}", attributes);
+			}
+			request.setAttributes(new HashMap<String, Object>(attributes));
+		}
+	}
+
+	private Object call(final RpcRequest request) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Process sync invoke,request={}", request);
+		}
 		RpcResponse response = serviceInvoker.invoke(request);
+		RpcContext.get().setResponse(response);
 		return response.getResult();
+	}
+
+	private Object acall(final RpcRequest request) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Process async invoke,request={}", request);
+		}
+		Future<RpcResponse> future = asyncThreadPool.submit(new Callable<RpcResponse>() {
+			@Override
+			public RpcResponse call() throws Exception {
+				return serviceInvoker.invoke(request);
+			}
+		});
+		RpcContext.get().setFuture(future);
+		return null;
 	}
 
 	public int getTimeout() {
@@ -118,4 +173,7 @@ public class ServiceImporter
 		return methods.get(methodName);
 	}
 
+	public void setAsyncThreadPool(ThreadPoolTaskExecutor asyncThreadPool) {
+		this.asyncThreadPool = asyncThreadPool;
+	}
 }

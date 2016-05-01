@@ -6,7 +6,7 @@
 	<appender name="console-appender" class="org.apache.log4j.ConsoleAppender">
 		<param name="Target" value="System.out" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="[EPAY-CONSOLE] %d{yyyy-MM-dd HH:mm:ss.SSS} %p %c{1}.%M(%L) | %m%n" />
+			<param name="ConversionPattern" value="[EPAY-CONSOLE] %d{yyyy-MM-dd HH:mm:ss.SSS} %t %p %c{1}.%M(%L) | %m%n" />
 		</layout>
 	</appender>
 	
@@ -16,7 +16,7 @@
 		<param name="Encoding" value="GBK" />
 		<param name="DatePattern" value=".yyyyMMdd" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="[EPAY-DEFAULT] %d{yyyy-MM-dd HH:mm:ss.SSS} %p %c{1}.%M(%L) | %m%n" />
+			<param name="ConversionPattern" value="[EPAY-DEFAULT] %d{yyyy-MM-dd HH:mm:ss.SSS} %t %p %c{1}.%M(%L) | %m%n" />
 		</layout>
 		<filter class="org.apache.log4j.varia.LevelRangeFilter">
 			<param name="LevelMin" value="debug" />
@@ -30,7 +30,7 @@
 		<param name="Encoding" value="GBK" />
 		<param name="DatePattern" value=".yyyyMMdd" />
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="[EPAY-ERROR] %d{yyyy-MM-dd HH:mm:ss.SSS} %p %c{1}.%M(%L) | %m%n" />
+			<param name="ConversionPattern" value="[EPAY-ERROR] %d{yyyy-MM-dd HH:mm:ss.SSS} %t %p %c{1}.%M(%L) | %m%n" />
 		</layout>
 		<filter class="org.apache.log4j.varia.LevelRangeFilter">
 			<param name="LevelMin" value="error" />

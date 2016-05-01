@@ -1,9 +1,6 @@
 package io.wheel.engine;
 
 import java.io.Serializable;
-import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ServiceContext implements Serializable {
 
@@ -15,7 +12,7 @@ public class ServiceContext implements Serializable {
 			return new ServiceContext();
 		}
 	};
-	
+
 	public static void remove() {
 		LOCAL.remove();
 	}
@@ -24,10 +21,24 @@ public class ServiceContext implements Serializable {
 		return LOCAL.get();
 	}
 
-	private InetSocketAddress localAddress;
+	private RpcRequest request;
 
-	private InetSocketAddress remoteAddress;
+	private RpcResponse response;
 
-    private final Map<String, Object> values = new HashMap<String, Object>();
-	
+	public RpcRequest getRequest() {
+		return request;
+	}
+
+	public void setRequest(RpcRequest request) {
+		this.request = request;
+	}
+
+	public RpcResponse getResponse() {
+		return response;
+	}
+
+	public void setResponse(RpcResponse response) {
+		this.response = response;
+	}
+
 }
