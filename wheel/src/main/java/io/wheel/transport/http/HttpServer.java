@@ -29,7 +29,7 @@ public class HttpServer {
 		server.setHandler(context);
 		String servicePath = protocol.getParameterValue(HttpParameter.SERVICE_PATH);
 		context.addServlet(new ServletHolder(new HttpGateway(serviceGateway)), servicePath);
-		logger.info("Http server start!port={}", protocol.getPort());
+		logger.info("Http server started on port : {}", protocol.getPort());
 		server.start();
 	}
 

@@ -39,13 +39,7 @@
 	</appender>
 	
 	<!-- Loggers -->
-	<logger name="com.newsky.eaf">
-		<level value="info" />
-		<appender-ref ref="default-appender" />
-		<appender-ref ref="error-appender" />
-	</logger>
-
-	<logger name="com.newsky.epay">
+	<logger name="io.wheel">
 		<level value="info" />
 		<appender-ref ref="default-appender" />
 		<appender-ref ref="error-appender" />
@@ -75,15 +69,9 @@
 		<appender-ref ref="error-appender" />
 	</logger>
 	
-	<logger name="org.jgroups">
-		<level value="error" />
-		<appender-ref ref="default-appender" />
-		<appender-ref ref="error-appender" />
-	</logger>
-	
 	<!-- Root Logger -->
 	<root>
-		<level value="info"></level>
+		<level value="warn"></level>
 		<appender-ref ref="console-appender" />
 	</root>
 </log4j:configuration>

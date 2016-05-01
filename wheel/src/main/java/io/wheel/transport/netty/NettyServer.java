@@ -59,7 +59,7 @@ public class NettyServer {
 		} else {
 			serverBootstrap.bind(protocol.getPort()).sync();
 		}
-		logger.warn("Netty server started!prot={}", protocol.getPort());
+		logger.warn("Netty server started on prot : {}", protocol.getPort());
 	}
 
 	private class ServerHandler extends ChannelInboundHandlerAdapter {

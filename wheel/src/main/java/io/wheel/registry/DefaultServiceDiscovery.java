@@ -86,20 +86,22 @@ public class DefaultServiceDiscovery implements io.wheel.registry.ServiceDiscove
 		Collection<ServiceExp> serviceExps = serviceRepository.getAllServiceExps();
 		Set<String> serviceGroups = new HashSet<String>();
 		for (ServiceExp serviceExp : serviceExps) {
-			if (serviceGroups.contains(serviceExp.getServiceGroup())) {
+			String serviceGroup = serviceExp.getServiceGroup();
+			if (serviceGroups.contains(serviceGroup)) {
 				continue;
 			}
-			serviceGroups.add(serviceExp.getServiceGroup());
+			serviceGroups.add(serviceGroup);
 			if (serviceExp.needRegistry(registryName)) {
 				ServiceInfo serviceInfo = new ServiceInfo();
 				serviceInfo.setServiceCode(serviceExp.getServiceCode());
 				serviceInfo.setTimeout(serviceExp.getTimeout());
 				serviceInfo.setProtocols(this.getProtocols(serviceExp));
 				ServiceInstanceBuilder<ServiceInfo> builder = ServiceInstance.<ServiceInfo> builder();
-				builder.name(serviceExp.getServiceGroup());
+				builder.name(serviceGroup);
 				builder.payload(serviceInfo);
 				ServiceInstance<ServiceInfo> serviceInstance = builder.build();
 				serviceDiscovery.registerService(serviceInstance);
+				logger.warn("Export service : {}",serviceExp.getServiceGroup());
 			}
 		}
 	}
@@ -120,6 +122,7 @@ public class DefaultServiceDiscovery implements io.wheel.registry.ServiceDiscove
 				provider.start();
 				String key = getServiceProviderKey(registry, serviceGroup);
 				serviceProviders.put(key, provider);
+				logger.warn("Import service : {}",serviceGroup);
 			}
 		}
 	}

@@ -23,10 +23,4 @@ public interface Initializable {
 	 */
 	void init() throws Exception;
 
-	/**
-	 * 
-	 * @throws Exception
-	 */
-	// void destroy() throws Exception;
-
 }

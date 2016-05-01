@@ -10,11 +10,10 @@ import io.wheel.engine.RpcResponse;
 import io.wheel.engine.ServiceGateway;
 import io.wheel.registry.ServiceInfo;
 import io.wheel.transport.Transporter;
-import io.wheel.transport.http.HttpTransporter;
 
 public class NettyTransporter implements Transporter {
 
-	private static Logger logger = LoggerFactory.getLogger(HttpTransporter.class);
+	private static Logger logger = LoggerFactory.getLogger(NettyTransporter.class);
 
 	private NettyServer nettyServer;
 

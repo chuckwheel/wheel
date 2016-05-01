@@ -88,6 +88,6 @@ public class RpcResponse implements Serializable {
 
 	@Override
 	public String toString() {
-		return "[" + hashCode() + "]" + ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
 	}
 }

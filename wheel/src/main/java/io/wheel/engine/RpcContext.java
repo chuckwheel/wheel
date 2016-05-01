@@ -12,12 +12,6 @@ public class RpcContext implements Serializable {
 
 	private static final long serialVersionUID = 824031350880522209L;
 
-	private static final ThreadLocal<RpcContext> LOCAL = new ThreadLocal<RpcContext>() {
-		protected RpcContext initialValue() {
-			return new RpcContext();
-		}
-	};
-
 	// 是否异步
 	private boolean async;
 	// 隐藏参数
@@ -26,6 +20,12 @@ public class RpcContext implements Serializable {
 	private Future<RpcResponse> future;
 	// 同步结果
 	private RpcResponse response;
+
+	private static final ThreadLocal<RpcContext> LOCAL = new ThreadLocal<RpcContext>() {
+		protected RpcContext initialValue() {
+			return new RpcContext();
+		}
+	};
 
 	public static void remove() {
 		LOCAL.remove();
@@ -92,8 +92,4 @@ public class RpcContext implements Serializable {
 		this.async = async;
 	}
 
-	@Override
-	public String toString() {
-		return "[" + hashCode() + "]" + ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
-	}
 }
