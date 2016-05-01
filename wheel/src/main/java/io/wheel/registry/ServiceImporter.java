@@ -61,7 +61,7 @@ public class ServiceImporter
 			serviceInvoker = applicationContext.getBean(ServiceInvoker.class);
 		}
 		if (asyncThreadPool == null) {
-			asyncThreadPool = applicationContext.getBean("coreThreadPool", ThreadPoolTaskExecutor.class);
+			asyncThreadPool = applicationContext.getBean("asyncThreadPool", ThreadPoolTaskExecutor.class);
 		}
 	}
 
@@ -108,7 +108,7 @@ public class ServiceImporter
 		Map<String, Object> attributes = rpcContext.getAttributes();
 		if (!CollectionUtils.isEmpty(attributes)) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Set attributes to RpcRequest,attributes={}", attributes);
+				logger.debug("Set attributes to request,request={}", request);
 			}
 			request.setAttributes(new HashMap<String, Object>(attributes));
 		}

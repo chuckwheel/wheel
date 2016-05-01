@@ -28,7 +28,7 @@ import org.springframework.util.CollectionUtils;
 import io.wheel.config.Domain;
 import io.wheel.config.Protocol;
 import io.wheel.config.Registry;
-import io.wheel.engine.Initable;
+import io.wheel.engine.Initializable;
 
 /**
  * The default DefaultServiceDiscovery implement
@@ -37,7 +37,7 @@ import io.wheel.engine.Initable;
  * @since 2014-2-21
  * @version 1.0
  */
-public class DefaultServiceDiscovery implements io.wheel.registry.ServiceDiscovery, Initable {
+public class DefaultServiceDiscovery implements io.wheel.registry.ServiceDiscovery, Initializable {
 
 	private static Logger logger = LoggerFactory.getLogger(DefaultServiceDiscovery.class);
 
@@ -58,29 +58,27 @@ public class DefaultServiceDiscovery implements io.wheel.registry.ServiceDiscove
 
 	@Override
 	public void init() throws Exception {
-		if (!CollectionUtils.isEmpty(domain.getRegistrys())) {
-			for (Registry registry : domain.getRegistrys().values()) {
-
-				RetryPolicy retryPolicy = new ExponentialBackoffRetry(registry.getSleepTimeMs(),
-						registry.getMaxRetries());
-				CuratorFramework client = CuratorFrameworkFactory.newClient(registry.getAddress(), retryPolicy);
-				client.start();
-
-				ServiceDiscoveryBuilder<ServiceInfo> builder = ServiceDiscoveryBuilder.builder(ServiceInfo.class);
-				builder.client(client);
-				builder.basePath(registry.getPath());
-				builder.serializer(serializer);
-				ServiceDiscovery<ServiceInfo> serviceDiscovery = builder.build();
-				serviceDiscovery.start();
-
-				this.registerService(registry.getName(), serviceDiscovery);
-				this.initServiceProvider(registry.getName(), serviceDiscovery);
-
-				logger.warn("Start service registory!registry={}", registry);
-			}
-		} else {
+		if (CollectionUtils.isEmpty(domain.getRegistrys())) {
 			logger.warn("Service registory is empyt!");
+			return;
+		}
+		for (Registry registry : domain.getRegistrys().values()) {
 
+			RetryPolicy retryPolicy = new ExponentialBackoffRetry(registry.getSleepTimeMs(), registry.getMaxRetries());
+			CuratorFramework client = CuratorFrameworkFactory.newClient(registry.getAddress(), retryPolicy);
+			client.start();
+
+			ServiceDiscoveryBuilder<ServiceInfo> builder = ServiceDiscoveryBuilder.builder(ServiceInfo.class);
+			builder.client(client);
+			builder.basePath(registry.getPath());
+			builder.serializer(serializer);
+			ServiceDiscovery<ServiceInfo> serviceDiscovery = builder.build();
+			serviceDiscovery.start();
+
+			this.registerService(registry.getName(), serviceDiscovery);
+			this.initServiceProvider(registry.getName(), serviceDiscovery);
+
+			logger.warn("Start service registory!registry={}", registry);
 		}
 	}
 

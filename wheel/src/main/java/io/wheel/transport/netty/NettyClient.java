@@ -24,6 +24,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
 import io.wheel.config.Protocol;
+import io.wheel.engine.RpcErrorCodes;
 import io.wheel.engine.RpcException;
 import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
@@ -47,13 +48,13 @@ public class NettyClient {
 	private Bootstrap clientBootstrap;
 
 	private AtomicLong invokeIds = new AtomicLong();
-	
+
 	private Map<String, Channel> channels = new ConcurrentHashMap<String, Channel>();
 
 	private AttributeKey<ServiceInstance<ServiceInfo>> targetKey = AttributeKey.valueOf("TARGET");
 
 	private Map<Long, InvokeFuture<RpcResponse>> futures = new ConcurrentHashMap<Long, InvokeFuture<RpcResponse>>();
-	
+
 	public NettyClient(Protocol protocol) {
 		this.protocol = protocol;
 	}
@@ -77,12 +78,12 @@ public class NettyClient {
 	private Channel getChannel(ServiceProvider<ServiceInfo> provider) throws Exception {
 		ServiceInstance<ServiceInfo> target = provider.getInstance();
 		ServiceInfo serviceInfo = target.getPayload();
-		String p = serviceInfo.getProtocol(protocol.getName());
-		if (p == null) {
-			logger.error("");
-			throw new RpcException("");
+		String protocols = serviceInfo.getProtocol(protocol.getName());
+		if (protocols == null) {
+			logger.error("Undefined protocol,protocol={}", protocol);
+			throw new RpcException(RpcErrorCodes.UNDEFINED_PROTOCOL);
 		}
-		String[] values = p.split(":");
+		String[] values = protocols.split(":");
 		String address = values[0];
 		int port = Integer.parseInt(values[1]);
 		String channelCode = address + ":" + port;
@@ -128,7 +129,7 @@ public class NettyClient {
 			return result;
 		} catch (Exception e) {
 			provider.noteError(channel.attr(targetKey).get());
-			logger.error("Send and receive failed! invokeId={}",invokeId, e);
+			logger.error("Send and receive failed! invokeId={}", invokeId, e);
 			throw new RpcException("", e);
 		}
 	}
@@ -136,7 +137,7 @@ public class NettyClient {
 	private class ClientHandler extends ChannelInboundHandlerAdapter {
 
 		public void channelRead(ChannelHandlerContext ctx, Object message) throws Exception {
-			
+
 			if (message == null) {
 				logger.warn("Received message is null!");
 				return;
@@ -148,10 +149,10 @@ public class NettyClient {
 				if (future != null) {
 					future.setResult(response);
 				} else {
-					logger.warn("InvokeFuture is null,invokeId=" + invokeId);
+					logger.warn("InvokeFuture is null,invokeId={}", invokeId);
 				}
 			} else {
-				logger.warn("Received message type is !" + message);
+				logger.warn("Received invalid message type,message={}" + message);
 			}
 		}
 

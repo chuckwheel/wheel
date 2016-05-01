@@ -96,22 +96,22 @@ public class RpcClient {
 	private static void testNetty5(ApplicationContext context){
 		final HelloService helloService = context.getBean(HelloService.class);
 		
-		RpcContext.get().setAttribute("name", "chuck");
-		RpcContext.get().setAttribute("code", 01);
+		RpcContext.get().setAttribute("name1", "chuck1");
+		RpcContext.get().setAttribute("code1", 01);
 		RpcContext.get().async();
-		helloService.hello("huangchuan");
+		helloService.hello("fuck1");
 		Future<RpcResponse> f1 = RpcContext.get().getFuture();
 		
-		RpcContext.get().setAttribute("name2", "chuck");
-		RpcContext.get().setAttribute("code3", 01);
-		RpcContext.get().async();
-		helloService.hello("fuck");
-		Future<RpcResponse> f2 = RpcContext.get().getFuture();
-		
-		RpcContext.get().setAttribute("name2", "chuck");
-		RpcContext.get().setAttribute("code3", 01);
+		RpcContext.get().setAttribute("name2", "chuck2");
+		RpcContext.get().setAttribute("code2", 02);
 		RpcContext.get().async();
 		helloService.hello("fuck2");
+		Future<RpcResponse> f2 = RpcContext.get().getFuture();
+		
+		RpcContext.get().setAttribute("name3", "chuck3");
+		RpcContext.get().setAttribute("code3", 03);
+		RpcContext.get().async();
+		helloService.hello("fuck3");
 		Future<RpcResponse> f3 = RpcContext.get().getFuture();
 		
 		try {

@@ -22,7 +22,7 @@ import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.ContextStoppedEvent;
 import org.springframework.util.CollectionUtils;
 
-import io.wheel.engine.Initable;
+import io.wheel.engine.Initializable;
 
 public class Domain implements ApplicationContextAware, ApplicationListener<ApplicationEvent> {
 
@@ -83,23 +83,23 @@ public class Domain implements ApplicationContextAware, ApplicationListener<Appl
 			}
 		}
 		
-		Map<String, Initable> initializables = applicationContext.getBeansOfType(Initable.class);
+		Map<String, Initializable> initializables = applicationContext.getBeansOfType(Initializable.class);
 		if (CollectionUtils.isEmpty(initializables)) {
 			logger.warn("Nothing to initialize!");
 			return;
 		}
-		List<Initable> list = new ArrayList<Initable>(initializables.values());
-		Collections.sort(list, new Comparator<Initable>() {
+		List<Initializable> list = new ArrayList<Initializable>(initializables.values());
+		Collections.sort(list, new Comparator<Initializable>() {
 			@Override
-			public int compare(Initable o1, Initable o2) {
+			public int compare(Initializable o1, Initializable o2) {
 				return o1.index() - o2.index();
 			}
 		});
-		for (Initable initializable : list) {
+		for (Initializable initializable : list) {
 			String index = StringUtils.leftPad(initializable.index() + "", 3, " ");
 			logger.warn("Pre-initing bean,index={},bean={}", index, initializable);
 		}
-		for (final Initable initializable : list) {
+		for (final Initializable initializable : list) {
 			try {
 				initializable.init();
 			} catch (Exception e) {

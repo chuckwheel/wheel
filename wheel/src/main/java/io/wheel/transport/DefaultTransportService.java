@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 
 import io.wheel.config.Domain;
 import io.wheel.config.Protocol;
-import io.wheel.engine.Initable;
+import io.wheel.engine.Initializable;
 
-public class DefaultTransportService implements TransportService, Initable {
+public class DefaultTransportService implements TransportService, Initializable {
 
 	private Logger logger = LoggerFactory.getLogger(DefaultTransportService.class);
 
@@ -33,7 +33,6 @@ public class DefaultTransportService implements TransportService, Initable {
 				logger.warn("Transporter not found!protocol={}", protocol);
 			}
 		}
-		logger.warn("Init TransportService!");
 	}
 
 	public Transporter getTransporter(String name) {

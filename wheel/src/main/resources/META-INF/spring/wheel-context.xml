@@ -43,6 +43,13 @@
 		<property name="queueCapacity" value="200" /> 
 	</bean>
 	
+	<bean id="asyncThreadPool" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor" >
+		<property name="corePoolSize" value="10" />
+		<property name="keepAliveSeconds" value="30000" />
+		<property name="maxPoolSize" value="100" />  
+		<property name="queueCapacity" value="100" /> 
+	</bean>
+	
 	<bean id="serviceExecutor" class="io.wheel.engine.DefaultServiceExecutor" />
 	
 	<bean id="serviceRepository" class="io.wheel.registry.DefaultServiceRepository" />
@@ -56,7 +63,6 @@
     	<property name="transportService" ref="transportService"/>
     	<property name="serviceDiscovery" ref="serviceDiscovery"/>
     	<property name="serviceRepository" ref="serviceRepository"/>
-    	<!-- <property name="coreThreadPool" ref="coreThreadPool"/> -->
     </bean>
 	
 </beans>

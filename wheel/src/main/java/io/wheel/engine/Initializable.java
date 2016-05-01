@@ -7,7 +7,7 @@ package io.wheel.engine;
  * @since 2013-10-10
  * @version 1.0
  */
-public interface Initable {
+public interface Initializable {
 
 	/**
 	 * 初始化顺序

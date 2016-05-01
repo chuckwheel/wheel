@@ -29,7 +29,7 @@ public class HelloServiceImpl implements HelloService {
 		
 		Map<String, Object> attributes = ServiceContext.get().getRequest().getAttributes();
 		logger.info(""+attributes);
-		ServiceContext.get().getResponse().setAttribute("rspCode", "9999999999");
+		ServiceContext.get().getResponse().setAttributes(attributes);
 		return "Hello " + name;
 	}
 
