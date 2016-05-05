@@ -53,6 +53,10 @@ public class NettyClient {
 
 	private AttributeKey<ServiceInstance<ServiceInfo>> targetKey = AttributeKey.valueOf("TARGET");
 
+	private AttributeKey<Boolean> closeableKey = AttributeKey.valueOf("CLOSEABLE");
+
+	private AttributeKey<Boolean> writableKey = AttributeKey.valueOf("WRITABLE");
+
 	private Map<Long, InvokeFuture<RpcResponse>> futures = new ConcurrentHashMap<Long, InvokeFuture<RpcResponse>>();
 
 	public NettyClient(Protocol protocol) {
@@ -89,13 +93,28 @@ public class NettyClient {
 		String channelCode = address + ":" + port;
 		Channel channel = channels.get(channelCode);
 		if (channel != null && channel.isActive()) {
-			return channel;
+			if (channel.attr(writableKey).get()) {
+				return channel;
+			} else {
+				// 新连接
+				Channel newChannel = clientBootstrap.connect(address, port).sync().channel();
+				newChannel.attr(closeableKey).set(true);
+				return newChannel;
+			}
 		}
 		try {
 			channel = clientBootstrap.connect(address, port).sync().channel();
-			channels.put(channelCode, channel);
-			channel.attr(targetKey).set(target);
-			return channel;
+			if (channels.containsKey(channelCode)) {
+				// 新连接
+				channel.attr(closeableKey).set(true);
+				channel.attr(targetKey).set(target);
+				return channel;
+			} else {
+				channel.attr(closeableKey).set(false);
+				channel.attr(targetKey).set(target);
+				channels.put(channelCode, channel);
+				return channel;
+			}
 		} catch (Exception e) {
 			// 标记为不可用
 			provider.noteError(target);
@@ -113,6 +132,7 @@ public class NettyClient {
 		try {
 			channel = this.getChannel(provider);
 			ChannelFuture channelFuture = channel.writeAndFlush(request);
+			channel.attr(writableKey).set(false);
 			channelFuture.addListener(new ChannelFutureListener() {
 				public void operationComplete(ChannelFuture future) throws Exception {
 					if (!future.isSuccess()) {
@@ -122,6 +142,7 @@ public class NettyClient {
 				}
 			});
 			RpcResponse result = invokeFuture.getResult(request.getTimeout(), TimeUnit.SECONDS);
+			channel.attr(writableKey).set(true);
 			if (result == null) {
 				provider.noteError(channel.attr(targetKey).get());
 				throw new RpcException();
@@ -131,6 +152,14 @@ public class NettyClient {
 			provider.noteError(channel.attr(targetKey).get());
 			logger.error("Send and receive failed! invokeId={}", invokeId, e);
 			throw new RpcException("", e);
+		} finally {
+			boolean closeable = channel.attr(closeableKey).get();
+			if (closeable) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Close channel,channel={}", channel);
+				}
+				channel.close();
+			}
 		}
 	}
 
@@ -158,7 +187,7 @@ public class NettyClient {
 
 		@Override
 		public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-			cause.printStackTrace();
+			// cause.printStackTrace();
 		}
 
 	}

@@ -18,6 +18,7 @@ public class ServiceContext implements Serializable {
 	}
 
 	public static ServiceContext get() {
+		System.out.println();
 		return LOCAL.get();
 	}
 

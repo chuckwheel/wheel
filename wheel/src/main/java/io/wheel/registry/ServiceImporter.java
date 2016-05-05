@@ -97,7 +97,11 @@ public class ServiceImporter
 			request.setArguments(invocation.getArguments());
 			request.setTimeout(getTimeout());
 			this.setAttributes(request, rpcContext);
-			return rpcContext.isAsync() ? this.acall(request) : this.call(request);
+			if (rpcContext.isAsync()) {
+				return this.acall(request);
+			} else {
+				return this.call(request);
+			}
 		} finally {
 			rpcContext.setAsync(false);
 			rpcContext.clearAttributes();
@@ -107,9 +111,6 @@ public class ServiceImporter
 	private void setAttributes(RpcRequest request, RpcContext rpcContext) {
 		Map<String, Object> attributes = rpcContext.getAttributes();
 		if (!CollectionUtils.isEmpty(attributes)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Set attributes to request,request={}", request);
-			}
 			request.setAttributes(new HashMap<String, Object>(attributes));
 		}
 	}

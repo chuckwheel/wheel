@@ -23,7 +23,6 @@ public class DefaultServiceInvoker implements ServiceInvoker {
 
 	@Override
 	public RpcResponse invoke(RpcRequest request) {
-
 		String serviceCode = request.getServiceCode();
 		ServiceImp serviceImp = serviceRepository.getServiceImp(serviceCode);
 		if (serviceImp == null) {
@@ -40,8 +39,6 @@ public class DefaultServiceInvoker implements ServiceInvoker {
 		} catch (Exception e) {
 			logger.error("Call remote service error!serviceCode={},method name={}", e);
 			throw new RpcException("", e);
-		} finally {
-			// logger.info("");
 		}
 
 		if (response == null) {

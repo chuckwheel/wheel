@@ -43,12 +43,15 @@
 		<property name="queueCapacity" value="200" /> 
 	</bean>
 	
+	<alias alias="asyncThreadPool" name="coreThreadPool"/>
+	<!-- 
 	<bean id="asyncThreadPool" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor" >
 		<property name="corePoolSize" value="10" />
 		<property name="keepAliveSeconds" value="30000" />
 		<property name="maxPoolSize" value="100" />  
 		<property name="queueCapacity" value="100" /> 
-	</bean>
+	</bean> 
+	-->
 	
 	<bean id="serviceExecutor" class="io.wheel.engine.DefaultServiceExecutor" />
 	

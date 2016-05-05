@@ -24,76 +24,12 @@ public class RpcClient {
 	public static void main(String[] args) throws Exception {
 		ApplicationContext context = new ClassPathXmlApplicationContext("classpath:META-INF/spring/wheel-context.xml","classpath:clientContext.xml");
 		
-//		testNetty0(context);
-		testNetty5(context);
+		testSync(context);
+		testAsync(context);
 		
 	}
 	
-	private static void testNetty0(ApplicationContext context){
-		final HelloService helloService = context.getBean(HelloService.class);
-		
-		new Thread(){
-			@Override
-			public void run() {
-				RpcContext.get().setAttribute("name", "chuck");
-				RpcContext.get().setAttribute("code", 01);
-				RpcContext.get().async();
-				helloService.hello("huangchuan");
-				Future<RpcResponse> f1 = RpcContext.get().getFuture();
-				try {
-					f1.get();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}.start();
-		
-		new Thread(){
-			@Override
-			public void run() {
-				RpcContext.get().setAttribute("name2", "chuck2");
-				RpcContext.get().setAttribute("code2", 01);
-				RpcContext.get().async();
-				helloService.hello("fuck");
-				Future<RpcResponse> f2 = RpcContext.get().getFuture();
-			}
-		}.start();
-		
-		new Thread(){
-			@Override
-			public void run() {
-				RpcContext.get().setAttribute("name3", "chuck3");
-				RpcContext.get().setAttribute("code3", 01);
-				RpcContext.get().async();
-				helloService.hello("fuck");
-				Future<RpcResponse> f3 = RpcContext.get().getFuture();
-				
-			}
-		}.start();
-//		try {
-//			String sss1 = f1.get().getResult();
-//			String sss2 = f2.get().getResult();
-//			logger.info(sss1);
-//			logger.info(sss2);
-//			
-//			logger.info(""+f1.get().getAttributes());
-//			logger.info(""+f1.get().getAttributes());
-//			
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (ExecutionException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-	}
-	
-	private static void testNetty5(ApplicationContext context){
+	private static void testAsync(ApplicationContext context){
 		final HelloService helloService = context.getBean(HelloService.class);
 		
 		RpcContext.get().setAttribute("name1", "chuck1");
@@ -124,32 +60,20 @@ public class RpcClient {
 		
 	}
 	
-	private static void testNetty1(ApplicationContext context){
+	private static void testSync(ApplicationContext context){
 		HelloService helloService = context.getBean(HelloService.class);
 		
 		RpcContext.get().setAttribute("name", "chuck");
 		RpcContext.get().setAttribute("code", 01);
-		RpcContext.get().async();
-		helloService.hello("huangchuan");
-		Future<RpcResponse> f1 = RpcContext.get().getFuture();
+		String result1 = helloService.hello("huangchuan");
+		logger.info(result1);
+		logger.info("{}",RpcContext.get().getResponse().getAttributes());
 		
 		RpcContext.get().setAttribute("name2", "chuck");
 		RpcContext.get().setAttribute("code3", 01);
-		String v = helloService.hello("fuck");
-		logger.info(v);
-		logger.info(""+RpcContext.get().getResponse().getAttributes());
-		
-		try {
-			String sss1 = f1.get().getResult();
-			logger.info(sss1);
-			logger.info(""+f1.get().getAttributes());
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		String result2 = helloService.hello("fuck");
+		logger.info(result2);
+		logger.info("{}",RpcContext.get().getResponse().getAttributes());
 		
 	}
 	
