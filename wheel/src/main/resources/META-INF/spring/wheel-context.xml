@@ -11,6 +11,9 @@
 	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 	
+	
+	<bean id="domain" class="io.wheel.config.Domain"/>
+	
 	<bean id="transportService" class="io.wheel.transport.DefaultTransportService">
 		<property name="domain" ref="domain"/>
 		<property name="transporters">

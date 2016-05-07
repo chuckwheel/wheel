@@ -28,18 +28,10 @@ public class Domain implements ApplicationContextAware, ApplicationListener<Appl
 
 	private Logger logger = LoggerFactory.getLogger(Domain.class);
 
-	private String appId = "wheel";
-
-	private String nodeId = "wheel-1";
-
-	private String version = "v1.0-20140401";
-
-	private String owner = "chuck";
-
-	private int defaultTimeout = 5;
+	private Application application;
 
 	private Map<String, Registry> registrys = new HashMap<String, Registry>();
-	
+
 	private Map<String, Protocol> protocols = new HashMap<String, Protocol>();
 
 	private ApplicationContext applicationContext;
@@ -67,7 +59,12 @@ public class Domain implements ApplicationContextAware, ApplicationListener<Appl
 	}
 
 	private void init() {
-		
+
+		if (application == null) {
+			application = applicationContext.getBean(Application.class);
+		}
+		logger.warn(application.toString());
+
 		Map<String, Registry> registrys = applicationContext.getBeansOfType(Registry.class);
 		if (!CollectionUtils.isEmpty(registrys)) {
 			for (Registry registry : registrys.values()) {
@@ -82,7 +79,7 @@ public class Domain implements ApplicationContextAware, ApplicationListener<Appl
 				logger.warn(protocol.toString());
 			}
 		}
-		
+
 		Map<String, Initializable> initializables = applicationContext.getBeansOfType(Initializable.class);
 		if (CollectionUtils.isEmpty(initializables)) {
 			logger.warn("Nothing to initialize!");
@@ -106,7 +103,7 @@ public class Domain implements ApplicationContextAware, ApplicationListener<Appl
 				logger.error("Initialize bean error,bean={}", initializable, e);
 			}
 		}
-		logger.warn("Wheel startup success! Version info={}", version);
+		logger.warn("Wheel startup success! Version info={}", this.getVersion());
 	}
 
 	@Override
@@ -115,43 +112,23 @@ public class Domain implements ApplicationContextAware, ApplicationListener<Appl
 	}
 
 	public String getAppId() {
-		return appId;
-	}
-
-	public void setAppId(String appId) {
-		this.appId = appId;
+		return this.getApplication().getAppId();
 	}
 
 	public String getNodeId() {
-		return nodeId;
-	}
-
-	public void setNodeId(String nodeId) {
-		this.nodeId = nodeId;
+		return this.getApplication().getNodeId();
 	}
 
 	public String getVersion() {
-		return version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
+		return this.getApplication().getVersion();
 	}
 
 	public String getOwner() {
-		return owner;
-	}
-
-	public void setOwner(String owner) {
-		this.owner = owner;
+		return this.getApplication().getOwner();
 	}
 
 	public int getDefaultTimeout() {
-		return defaultTimeout;
-	}
-
-	public void setDefaultTimeout(int defaultTimeout) {
-		this.defaultTimeout = defaultTimeout;
+		return this.getApplication().getDefaultTimeout();
 	}
 
 	public Map<String, Registry> getRegistrys() {
@@ -168,6 +145,17 @@ public class Domain implements ApplicationContextAware, ApplicationListener<Appl
 
 	public void setProtocols(Map<String, Protocol> protocols) {
 		this.protocols = protocols;
+	}
+
+	public Application getApplication() {
+		if (application == null) {
+			application = applicationContext.getBean(Application.class);
+		}
+		return application;
+	}
+
+	public void setApplication(Application application) {
+		this.application = application;
 	}
 
 }

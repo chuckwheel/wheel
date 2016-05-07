@@ -18,7 +18,7 @@ import io.wheel.engine.RpcResponse;
 import io.wheel.engine.ServiceGateway;
 
 /**
- * 
+ * NettyServer
  * 
  * @author chuck
  * @since 2014-2-21
@@ -56,11 +56,10 @@ public class NettyServer {
 		});
 		if (StringUtils.isNotBlank(protocol.getHost())) {
 			serverBootstrap.bind(protocol.getHost(), protocol.getPort()).sync();
-			logger.warn("Netty server started on {}:{}",protocol.getHost(), protocol.getPort());
 		} else {
 			serverBootstrap.bind(protocol.getPort()).sync();
-			logger.warn("Netty server started on prot : {}", protocol.getPort());
 		}
+		logger.warn("Netty server started on prot : {}", protocol.getPort());
 	}
 
 	private class ServerHandler extends ChannelInboundHandlerAdapter {
@@ -87,9 +86,9 @@ public class NettyServer {
 
 		@Override
 		public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-			//cause.printStackTrace();
+			// cause.printStackTrace();
 		}
-		
+
 	}
 
 }

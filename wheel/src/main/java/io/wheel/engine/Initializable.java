@@ -22,5 +22,4 @@ public interface Initializable {
 	 * @throws Exception
 	 */
 	void init() throws Exception;
-
 }

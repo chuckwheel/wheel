@@ -115,7 +115,7 @@ public class ServiceImporter
 		}
 	}
 
-	private Object call(final RpcRequest request) {
+	private Object call(RpcRequest request) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Process sync invoke,request={}", request);
 		}

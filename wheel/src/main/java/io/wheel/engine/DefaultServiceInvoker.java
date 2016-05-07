@@ -4,6 +4,7 @@ import org.apache.curator.x.discovery.ServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.wheel.exceptions.ServiceUndefinedException;
 import io.wheel.registry.ServiceDiscovery;
 import io.wheel.registry.ServiceImp;
 import io.wheel.registry.ServiceInfo;
@@ -26,8 +27,7 @@ public class DefaultServiceInvoker implements ServiceInvoker {
 		String serviceCode = request.getServiceCode();
 		ServiceImp serviceImp = serviceRepository.getServiceImp(serviceCode);
 		if (serviceImp == null) {
-			logger.error("Service importer is null!serviceCode={}", serviceCode);
-			return null;
+			throw new ServiceUndefinedException(serviceCode);
 		}
 		RpcResponse response = null;
 		try {
