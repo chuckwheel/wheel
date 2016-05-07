@@ -38,7 +38,7 @@ public class ErrorCodeException extends RuntimeException {
 	}
 
 	public ErrorCodeException(String errorCode, Throwable cause, Object[] arguments) {
-		super("RPC error happened! ErrorCode is : " + errorCode, cause);
+		super("Rpc error happened!", cause);
 		this.errorCode = errorCode;
 		this.arguments = arguments;
 		this.errorMessage = MessageSourceHelper.getMessage(errorCode, arguments, super.getMessage());
@@ -67,9 +67,9 @@ public class ErrorCodeException extends RuntimeException {
 	@Override
 	public String getMessage() {
 		if (this.errorMessage == null) {
-			return super.getMessage();
+			return "["+errorCode+"] "+super.getMessage();
 		} else {
-			return this.errorMessage;
+			return "["+errorCode+"] "+this.errorMessage;
 		}
 	}
 

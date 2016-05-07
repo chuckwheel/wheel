@@ -30,7 +30,7 @@ public class DefaultServiceExecutor implements ServiceExecutor {
 			response.setSuccess(true);
 			return response;
 		} catch (Exception t) {
-			logger.error("Invoke local service failed! serviceExp={}", serviceExp, t);
+			//logger.error("Invoke local service failed! serviceExp={}", serviceExp, t);
 			Exception cause = (Exception) t.getCause();
 			throw (cause != null) ? cause : t;
 		} finally {
