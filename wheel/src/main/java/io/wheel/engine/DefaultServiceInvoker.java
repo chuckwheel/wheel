@@ -4,6 +4,7 @@ import org.apache.curator.x.discovery.ServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.wheel.RpcException;
 import io.wheel.exceptions.ServiceUndefinedException;
 import io.wheel.registry.ServiceDiscovery;
 import io.wheel.registry.ServiceImp;
@@ -12,6 +13,13 @@ import io.wheel.registry.ServiceRepository;
 import io.wheel.transport.TransportService;
 import io.wheel.transport.Transporter;
 
+/**
+ * 
+ * 
+ * @author chuan.huang
+ * @since 2014-3-5
+ * @version 1.0
+ */
 public class DefaultServiceInvoker implements ServiceInvoker {
 
 	private static Logger logger = LoggerFactory.getLogger(DefaultServiceInvoker.class);

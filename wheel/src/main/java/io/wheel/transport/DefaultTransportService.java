@@ -6,9 +6,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.wheel.Initializable;
 import io.wheel.config.Domain;
 import io.wheel.config.Protocol;
-import io.wheel.engine.Initializable;
 
 public class DefaultTransportService implements TransportService, Initializable {
 

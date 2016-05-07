@@ -1,10 +1,21 @@
 package io.wheel.engine;
 
 import java.io.Serializable;
-
+/**
+ * 
+ * 
+ * @author chuan.huang
+ * @since 2014-3-5
+ * @version 1.0
+ */
 public class ServiceContext implements Serializable {
 
 	private static final long serialVersionUID = 824031350880522209L;
+
+	// 请求对象
+	private RpcRequest request;
+	// 应答对象
+	private RpcResponse response;
 
 	private static final ThreadLocal<ServiceContext> LOCAL = new ThreadLocal<ServiceContext>() {
 		@Override
@@ -21,10 +32,6 @@ public class ServiceContext implements Serializable {
 		System.out.println();
 		return LOCAL.get();
 	}
-
-	private RpcRequest request;
-
-	private RpcResponse response;
 
 	public RpcRequest getRequest() {
 		return request;

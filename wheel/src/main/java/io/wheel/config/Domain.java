@@ -22,7 +22,7 @@ import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.ContextStoppedEvent;
 import org.springframework.util.CollectionUtils;
 
-import io.wheel.engine.Initializable;
+import io.wheel.Initializable;
 
 public class Domain implements ApplicationContextAware, ApplicationListener<ApplicationEvent> {
 

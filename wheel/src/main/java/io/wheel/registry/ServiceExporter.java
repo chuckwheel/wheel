@@ -7,10 +7,11 @@ import org.springframework.beans.factory.FactoryBean;
 
 public class ServiceExporter<T> implements FactoryBean<T> {
 
+	// 本地执行时超时时间
 	private int timeout = 0;
-
+	// 发布的注册中心列表
 	private String registry;
-
+	// 发布的协议类型列表
 	private String protocol;
 
 	private T object;

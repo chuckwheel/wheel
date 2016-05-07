@@ -5,6 +5,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
 
+/**
+ * RpcContext
+ * 
+ * @author chuck
+ * @since 2013-10-10
+ * @version 1.0
+ */
 public class RpcContext implements Serializable {
 
 	private static final long serialVersionUID = 824031350880522209L;

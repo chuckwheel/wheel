@@ -6,7 +6,13 @@ import java.util.Map;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
-
+/**
+ * 
+ * 
+ * @author chuan.huang
+ * @since 2014-3-5
+ * @version 1.0
+ */
 public class RpcResponse implements Serializable {
 
 	private static final long serialVersionUID = 1L;

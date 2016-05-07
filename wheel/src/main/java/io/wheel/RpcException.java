@@ -1,8 +1,14 @@
-package io.wheel.engine;
+package io.wheel;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
-
+/**
+ * 
+ * 
+ * @author chuan.huang
+ * @since 2014-3-5
+ * @version 1.0
+ */
 public class RpcException extends RuntimeException {
 
 	private static final long serialVersionUID = -4496194597047711613L;

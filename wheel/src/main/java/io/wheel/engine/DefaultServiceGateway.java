@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import io.wheel.RpcException;
 import io.wheel.config.Domain;
 import io.wheel.registry.ServiceExp;
 import io.wheel.registry.ServiceRepository;

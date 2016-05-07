@@ -1,7 +1,7 @@
-package io.wheel.engine;
+package io.wheel;
 
 /**
- * 自定义初始化接口
+ * 初始化接口
  * 
  * @author chuck
  * @since 2013-10-10

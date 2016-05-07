@@ -11,8 +11,8 @@ import org.eclipse.jetty.client.util.BytesContentProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.wheel.RpcException;
 import io.wheel.config.Protocol;
-import io.wheel.engine.RpcException;
 import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
 import io.wheel.registry.ServiceInfo;

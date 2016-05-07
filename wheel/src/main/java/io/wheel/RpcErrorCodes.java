@@ -1,4 +1,4 @@
-package io.wheel.engine;
+package io.wheel;
 
 public interface RpcErrorCodes {
 

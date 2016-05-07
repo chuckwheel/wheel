@@ -25,13 +25,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
+import io.wheel.Initializable;
 import io.wheel.config.Domain;
 import io.wheel.config.Protocol;
 import io.wheel.config.Registry;
-import io.wheel.engine.Initializable;
 
 /**
- * The default DefaultServiceDiscovery implement
+ * DefaultServiceDiscovery
  * 
  * @author chuck
  * @since 2014-2-21
@@ -101,7 +101,7 @@ public class DefaultServiceDiscovery implements io.wheel.registry.ServiceDiscove
 				builder.payload(serviceInfo);
 				ServiceInstance<ServiceInfo> serviceInstance = builder.build();
 				serviceDiscovery.registerService(serviceInstance);
-				logger.warn("Export service : {}",serviceExp.getServiceGroup());
+				logger.warn("Export service : {}", serviceExp.getServiceGroup());
 			}
 		}
 	}
@@ -122,7 +122,7 @@ public class DefaultServiceDiscovery implements io.wheel.registry.ServiceDiscove
 				provider.start();
 				String key = getServiceProviderKey(registry, serviceGroup);
 				serviceProviders.put(key, provider);
-				logger.warn("Import service : {}",serviceGroup);
+				logger.warn("Import service : {}", serviceGroup);
 			}
 		}
 	}

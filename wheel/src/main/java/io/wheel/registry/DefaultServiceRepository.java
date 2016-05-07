@@ -14,11 +14,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.CollectionUtils;
 
-import io.wheel.engine.Initializable;
+import io.wheel.Initializable;
 import io.wheel.utils.ClassHelper;
 
 /**
- * The default ServiceRepository implement
+ * DefaultServiceRepository
  * 
  * @author chuck
  * @since 2014-2-21
