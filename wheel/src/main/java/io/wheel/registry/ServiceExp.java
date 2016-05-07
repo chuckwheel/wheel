@@ -2,8 +2,9 @@ package io.wheel.registry;
 
 import java.lang.reflect.Method;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+
 
 public class ServiceExp {
 	// 服务码

@@ -71,7 +71,7 @@
 	
 	<!-- Root Logger -->
 	<root>
-		<level value="info"></level>
+		<level value="warn"></level>
 		<appender-ref ref="console-appender" />
 	</root>
 </log4j:configuration>

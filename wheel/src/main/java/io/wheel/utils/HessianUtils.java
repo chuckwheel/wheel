@@ -3,17 +3,15 @@ package io.wheel.utils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.caucho.hessian.io.HessianInput;
 import com.caucho.hessian.io.HessianOutput;
 
-import io.wheel.transport.http.HttpGateway;
-
 public class HessianUtils {
 
-	private static Log log = LogFactory.getLog(HttpGateway.class);
+	private static Logger log = LoggerFactory.getLogger(HessianUtils.class);
 
 	public static Object bytesToObject(byte[] bytes) {
 		if (bytes == null) {

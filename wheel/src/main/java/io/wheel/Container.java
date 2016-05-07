@@ -2,7 +2,7 @@ package io.wheel;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -27,7 +27,6 @@ public class Container {
 			container = new Container();
 			container.addShutdownHook();
 			container.start();
-			logger.warn("Wheel container started!");
 		} catch (RuntimeException e) {
 			logger.error(e.getMessage(), e);
 			System.exit(1);

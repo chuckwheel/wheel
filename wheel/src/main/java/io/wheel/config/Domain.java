@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -41,20 +41,21 @@ public class Domain implements ApplicationContextAware, ApplicationListener<Appl
 	@Override
 	public void onApplicationEvent(ApplicationEvent event) {
 		if (event instanceof ContextRefreshedEvent) {
-			logger.info("Context refreshed!");
+			logger.warn("Context refreshed!");
 			if (initialized.get()) {
-				logger.info("Context initialized!");
+				logger.warn("Context initialized!");
 				return;
 			} else {
-				logger.info("Begin initialize!");
+				logger.warn("Begin initialize!");
 				this.init();
 			}
 		} else if (event instanceof ContextStartedEvent) {
-			logger.info("Context started!");
+			logger.warn("Context started!");
+			logger.warn("Wheel startup success! Version info={}", this.getVersion());
 		} else if (event instanceof ContextClosedEvent) {
-			logger.info("Context closed!");
+			logger.warn("Context closed!");
 		} else if (event instanceof ContextStoppedEvent) {
-			logger.info("Context stopped!");
+			logger.warn("Context stopped!");
 		}
 	}
 
@@ -103,7 +104,6 @@ public class Domain implements ApplicationContextAware, ApplicationListener<Appl
 				logger.error("Initialize bean error,bean={}", initializable, e);
 			}
 		}
-		logger.warn("Wheel startup success! Version info={}", this.getVersion());
 	}
 
 	@Override
