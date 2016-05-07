@@ -41,7 +41,6 @@ public class Container {
 				}
 			}
 		}
-		
 	}
 
 	private void addShutdownHook() {

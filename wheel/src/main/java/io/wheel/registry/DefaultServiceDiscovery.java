@@ -57,6 +57,11 @@ public class DefaultServiceDiscovery implements io.wheel.registry.ServiceDiscove
 	}
 
 	@Override
+	public boolean abortOnError() {
+		return true;
+	}
+
+	@Override
 	public void init() throws Exception {
 		if (CollectionUtils.isEmpty(domain.getRegistrys())) {
 			logger.warn("Service registory is empyt!");

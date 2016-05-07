@@ -10,6 +10,13 @@ package io.wheel;
 public interface Initializable {
 
 	/**
+	 * 异常是是否终止
+	 * 
+	 * @return
+	 */
+	boolean abortOnError();
+
+	/**
 	 * 初始化顺序
 	 * 
 	 * @return

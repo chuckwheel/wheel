@@ -102,6 +102,10 @@ public class Domain implements ApplicationContextAware, ApplicationListener<Appl
 				initializable.init();
 			} catch (Exception e) {
 				logger.error("Initialize bean error,bean={}", initializable, e);
+				if(initializable.abortOnError()){
+					logger.error("Container will be exit!");
+					System.exit(1);
+				}
 			}
 		}
 	}

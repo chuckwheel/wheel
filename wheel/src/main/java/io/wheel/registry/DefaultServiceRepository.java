@@ -40,6 +40,11 @@ public class DefaultServiceRepository implements ServiceRepository, Initializabl
 	}
 
 	@Override
+	public boolean abortOnError() {
+		return true;
+	}
+
+	@Override
 	public void init() throws Exception {
 		this.serviceExps.clear();
 		this.registerAnnotationService();

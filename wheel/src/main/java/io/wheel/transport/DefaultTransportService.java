@@ -24,6 +24,11 @@ public class DefaultTransportService implements TransportService, Initializable 
 	}
 
 	@Override
+	public boolean abortOnError() {
+		return true;
+	}
+
+	@Override
 	public void init() throws Exception {
 		for (Protocol protocol : domain.getProtocols().values()) {
 			Transporter transporter = transporters.get(protocol.getName());
