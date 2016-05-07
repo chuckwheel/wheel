@@ -85,7 +85,7 @@ public class NettyClient {
 		String protocols = serviceInfo.getProtocol(protocol.getName());
 		if (protocols == null) {
 			logger.error("Undefined protocol,protocol={}", protocol);
-			throw new ErrorCodeException(ErrorCode.UNDEFINED_PROTOCOL);
+			throw new ErrorCodeException(ErrorCode.UNDEFINED_PROTOCOL, new Object[] { protocol });
 		}
 		String[] values = protocols.split(":");
 		String address = values[0];
@@ -119,7 +119,7 @@ public class NettyClient {
 			// 标记为不可用
 			provider.noteError(target);
 			logger.error("Init client connector failed! serverId:", e);
-			throw new ErrorCodeException("", e);
+			throw e;
 		}
 	}
 
@@ -145,13 +145,17 @@ public class NettyClient {
 			channel.attr(writableKey).set(true);
 			if (result == null) {
 				provider.noteError(channel.attr(targetKey).get());
-				throw new ErrorCodeException();
+				throw new ErrorCodeException(ErrorCode.SERVICE_INVOKE_ERROR);
 			}
 			return result;
+		} catch (ErrorCodeException e) {
+			provider.noteError(channel.attr(targetKey).get());
+			logger.error("Send and receive failed! invokeId={}", invokeId, e);
+			throw e;
 		} catch (Exception e) {
 			provider.noteError(channel.attr(targetKey).get());
 			logger.error("Send and receive failed! invokeId={}", invokeId, e);
-			throw new ErrorCodeException("", e);
+			throw new ErrorCodeException(ErrorCode.SERVICE_INVOKE_ERROR, e);
 		} finally {
 			boolean closeable = channel.attr(closeableKey).get();
 			if (closeable) {
