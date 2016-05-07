@@ -1,11 +1,7 @@
 package io.wheel.engine;
 
-import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import org.springframework.util.MethodInvoker;
 
 import io.wheel.registry.ServiceExp;
 
@@ -33,13 +29,10 @@ public class DefaultServiceExecutor implements ServiceExecutor {
 			response.setResult(result);
 			response.setSuccess(true);
 			return response;
-		} catch (Exception e) {
-			Throwable cause = e;
-			if (e.getCause() != null)
-				cause = e.getCause();
-			logger.error("Invoke local service failed! Local service info:" + serviceExp, cause);
-			response.setSuccess(false);
-			throw (Exception) cause;
+		} catch (Exception t) {
+			logger.error("Invoke local service failed! serviceExp={}", serviceExp, t);
+			Exception cause = (Exception) t.getCause();
+			throw (cause != null) ? cause : t;
 		} finally {
 			ServiceContext.remove();
 		}

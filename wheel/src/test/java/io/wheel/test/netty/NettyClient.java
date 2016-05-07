@@ -20,7 +20,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.wheel.RpcException;
+import io.wheel.ErrorCodeException;
 import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
 import io.wheel.transport.netty.HessianDecoder;
@@ -91,7 +91,7 @@ public class NettyClient {
 			return null;
 		} catch (Exception e) {
 			logger.error("Send and receive failed! invokeId={}", invokeId, e);
-			throw new RpcException("", e);
+			throw new ErrorCodeException("", e);
 		}
 	}
 

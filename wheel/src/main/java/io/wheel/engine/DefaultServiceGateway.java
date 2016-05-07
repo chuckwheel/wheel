@@ -10,8 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import io.wheel.RpcException;
+import io.wheel.ErrorCode;
+import io.wheel.ErrorCodeException;
 import io.wheel.config.Domain;
+import io.wheel.exceptions.ServiceUndefinedException;
 import io.wheel.registry.ServiceExp;
 import io.wheel.registry.ServiceRepository;
 
@@ -35,11 +37,38 @@ public class DefaultServiceGateway implements ServiceGateway {
 	private ThreadPoolTaskExecutor coreThreadPool;
 
 	@Override
-	public RpcResponse service(final RpcRequest request) throws Exception {
+	public RpcResponse service(final RpcRequest request) {
+		RpcResponse response = null;
+		try {
+			response = this.process(request);
+		} catch (Throwable t) {
+			logger.error("Process service error,request={}", request, t);
+			response = new RpcResponse();
+			response.setSuccess(false);
+			if (t instanceof ErrorCodeException) {
+				ErrorCodeException ece = (ErrorCodeException) t;
+				response.setResultCode(ece.getErrorCode());
+				response.setResultMessage(ece.getErrorMessage());
+			} else if (t.getCause() instanceof ErrorCodeException) {
+				ErrorCodeException ece = (ErrorCodeException) t.getCause();
+				response.setResultCode(ece.getErrorCode());
+				response.setResultMessage(ece.getErrorMessage());
+			} else {
+				response.setResultCode(ErrorCode.FAILURE);
+				response.setResultMessage(t.getMessage());
+			}
+		}
+		return response;
+	}
+
+	private RpcResponse process(final RpcRequest request) throws Throwable {
+		Future<RpcResponse> future = null;
 		String serviceCode = request.getServiceCode();
 		final ServiceExp serviceExp = serviceRepository.getServiceExp(serviceCode);
-		int timeout = getTimeout(serviceExp, request);
-		Future<RpcResponse> future = null;
+		if (serviceExp == null) {
+			throw new ServiceUndefinedException(serviceCode);
+		}
+		int timeout = this.getTimeout(serviceExp, request);
 		try {
 			future = coreThreadPool.submit(new Callable<RpcResponse>() {
 				public RpcResponse call() throws Exception {
@@ -48,19 +77,15 @@ public class DefaultServiceGateway implements ServiceGateway {
 			});
 			return future.get(timeout, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
-			throw new RpcException("", e);
+			throw new ErrorCodeException(ErrorCode.SERVICE_INTERRUPTED);
 		} catch (TimeoutException e) {
 			if (future != null) {
 				future.cancel(true);
 			}
-			throw new RpcException("", e);
+			throw new ErrorCodeException(ErrorCode.SERVICE_TIMEOUT);
 		} catch (ExecutionException e) {
 			Throwable cause = e.getCause();
-			if (cause != null) {
-				throw (Exception) cause;
-			} else {
-				throw e;
-			}
+			throw (cause != null) ? cause : e;
 		}
 	}
 
@@ -78,7 +103,7 @@ public class DefaultServiceGateway implements ServiceGateway {
 	public void setDomain(Domain domain) {
 		this.domain = domain;
 	}
-	
+
 	public void setServiceExecutor(ServiceExecutor serviceExecutor) {
 		this.serviceExecutor = serviceExecutor;
 	}

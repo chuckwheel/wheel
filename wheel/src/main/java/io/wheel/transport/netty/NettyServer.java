@@ -71,16 +71,12 @@ public class NettyServer {
 				return;
 			}
 			RpcRequest request = (RpcRequest) message;
-			RpcResponse response = null;
-			try {
-				response = serviceGateway.service(request);
-			} catch (Exception e) {
-				logger.warn("Process client failed!invokeId={}", request.getInvokeId(), e);
-				throw e;
-			}
+			RpcResponse response = serviceGateway.service(request);
 			if (response != null) {
 				response.setInvokeId(request.getInvokeId());
 				ctx.writeAndFlush(response);
+			} else {
+				logger.error("Process service gateway error!invokeId={}", request.getInvokeId());
 			}
 		}
 

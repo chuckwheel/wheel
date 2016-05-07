@@ -23,8 +23,8 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
-import io.wheel.RpcErrorCodes;
-import io.wheel.RpcException;
+import io.wheel.ErrorCode;
+import io.wheel.ErrorCodeException;
 import io.wheel.config.Protocol;
 import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
@@ -85,7 +85,7 @@ public class NettyClient {
 		String protocols = serviceInfo.getProtocol(protocol.getName());
 		if (protocols == null) {
 			logger.error("Undefined protocol,protocol={}", protocol);
-			throw new RpcException(RpcErrorCodes.UNDEFINED_PROTOCOL);
+			throw new ErrorCodeException(ErrorCode.UNDEFINED_PROTOCOL);
 		}
 		String[] values = protocols.split(":");
 		String address = values[0];
@@ -119,7 +119,7 @@ public class NettyClient {
 			// 标记为不可用
 			provider.noteError(target);
 			logger.error("Init client connector failed! serverId:", e);
-			throw new RpcException("", e);
+			throw new ErrorCodeException("", e);
 		}
 	}
 
@@ -145,13 +145,13 @@ public class NettyClient {
 			channel.attr(writableKey).set(true);
 			if (result == null) {
 				provider.noteError(channel.attr(targetKey).get());
-				throw new RpcException();
+				throw new ErrorCodeException();
 			}
 			return result;
 		} catch (Exception e) {
 			provider.noteError(channel.attr(targetKey).get());
 			logger.error("Send and receive failed! invokeId={}", invokeId, e);
-			throw new RpcException("", e);
+			throw new ErrorCodeException("", e);
 		} finally {
 			boolean closeable = channel.attr(closeableKey).get();
 			if (closeable) {

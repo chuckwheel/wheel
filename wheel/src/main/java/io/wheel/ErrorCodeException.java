@@ -11,7 +11,7 @@ import io.wheel.utils.MessageSourceHelper;
  * @since 2014-3-5
  * @version 1.0
  */
-public class RpcException extends RuntimeException {
+public class ErrorCodeException extends RuntimeException {
 
 	private static final long serialVersionUID = -4496194597047711613L;
 
@@ -21,23 +21,23 @@ public class RpcException extends RuntimeException {
 
 	private Object[] arguments;
 
-	public RpcException() {
-		this(RpcErrorCodes.FAILURE);
+	public ErrorCodeException() {
+		this(ErrorCode.FAILURE);
 	}
 
-	public RpcException(String errorCode) {
+	public ErrorCodeException(String errorCode) {
 		this(errorCode, (Object[]) null);
 	}
 
-	public RpcException(String errorCode, Object[] arguments) {
+	public ErrorCodeException(String errorCode, Object[] arguments) {
 		this(errorCode, (Throwable) null, arguments);
 	}
 
-	public RpcException(String errorCode, Throwable cause) {
+	public ErrorCodeException(String errorCode, Throwable cause) {
 		this(errorCode, cause, (Object[]) null);
 	}
 
-	public RpcException(String errorCode, Throwable cause, Object[] arguments) {
+	public ErrorCodeException(String errorCode, Throwable cause, Object[] arguments) {
 		super("RPC error happened! ErrorCode is : " + errorCode, cause);
 		this.errorCode = errorCode;
 		this.arguments = arguments;
@@ -73,10 +73,10 @@ public class RpcException extends RuntimeException {
 		}
 	}
 
-	public RpcException getRootErrorCodeException() {
-		RpcException root = this;
-		while (root.getCause() != null && root.getCause() instanceof RpcException) {
-			root = (RpcException) root.getCause();
+	public ErrorCodeException getRootErrorCodeException() {
+		ErrorCodeException root = this;
+		while (root.getCause() != null && root.getCause() instanceof ErrorCodeException) {
+			root = (ErrorCodeException) root.getCause();
 		}
 		return root;
 	}

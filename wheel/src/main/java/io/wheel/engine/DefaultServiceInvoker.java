@@ -4,7 +4,7 @@ import org.apache.curator.x.discovery.ServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.wheel.RpcException;
+import io.wheel.ErrorCodeException;
 import io.wheel.exceptions.ServiceUndefinedException;
 import io.wheel.registry.ServiceDiscovery;
 import io.wheel.registry.ServiceImp;
@@ -46,15 +46,15 @@ public class DefaultServiceInvoker implements ServiceInvoker {
 			response = transporter.invoke(provider, request);
 		} catch (Exception e) {
 			logger.error("Call remote service error!serviceCode={},method name={}", e);
-			throw new RpcException("", e);
+			throw new ErrorCodeException("", e);
 		}
 
 		if (response == null) {
-			throw new RpcException("", new NullPointerException());
+			throw new ErrorCodeException("", new NullPointerException());
 		}
 
 		if (!response.isSuccess()) {
-			RpcException e = new RpcException();
+			ErrorCodeException e = new ErrorCodeException();
 			e.setErrorCode(response.getResultCode());
 			e.setErrorMessage(response.getResultMessage());
 			throw e;

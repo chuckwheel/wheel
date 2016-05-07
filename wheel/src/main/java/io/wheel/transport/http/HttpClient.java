@@ -11,7 +11,7 @@ import org.eclipse.jetty.client.util.BytesContentProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.wheel.RpcException;
+import io.wheel.ErrorCodeException;
 import io.wheel.config.Protocol;
 import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
@@ -58,17 +58,17 @@ public class HttpClient {
 			ContentResponse response = httpRequest.send();
 			if (response == null) {
 				logger.error("Send and Receive http request failed! resultCode=");
-				throw new RpcException();
+				throw new ErrorCodeException();
 			}
 			int resultCode = response.getStatus();
 			if (resultCode != 200) {
 				logger.error("Send and Receive http request failed! resultCode{}", resultCode);
-				throw new RpcException();
+				throw new ErrorCodeException();
 			}
 			return this.toRpcResponse(response);
 		} catch (Throwable t) {
 			logger.error("Send and Receive http request failed!", t);
-			throw new RpcException("", t);
+			throw new ErrorCodeException("", t);
 		}
 	}
 
