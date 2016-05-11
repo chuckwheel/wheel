@@ -29,8 +29,8 @@ public class HttpServer {
 		server.setHandler(context);
 		String servicePath = protocol.getParameterValue(HttpParameter.SERVICE_PATH);
 		context.addServlet(new ServletHolder(new HttpGateway(serviceGateway)), servicePath);
-		logger.warn("Http server started on port : {}", protocol.getPort());
 		server.start();
+		logger.warn("Http server started on port : {}", protocol.getPort());
 	}
 
 }

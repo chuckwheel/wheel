@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
 
 import io.wheel.utils.MessageSourceHelper;
+
 /**
  * 
  * 
@@ -38,7 +39,7 @@ public class ErrorCodeException extends RuntimeException {
 	}
 
 	public ErrorCodeException(String errorCode, Throwable cause, Object[] arguments) {
-		super("Rpc error happened!", cause);
+		super("Error code exception!", cause);
 		this.errorCode = errorCode;
 		this.arguments = arguments;
 		this.errorMessage = MessageSourceHelper.getMessage(errorCode, arguments, super.getMessage());
@@ -66,11 +67,8 @@ public class ErrorCodeException extends RuntimeException {
 
 	@Override
 	public String getMessage() {
-		if (this.errorMessage == null) {
-			return "["+errorCode+"] "+super.getMessage();
-		} else {
-			return "["+errorCode+"] "+this.errorMessage;
-		}
+		String msg = (this.errorMessage == null) ? super.getMessage() : this.errorMessage;
+		return (errorCode == null) ? msg : "[" + errorCode + "] " + msg;
 	}
 
 	public ErrorCodeException getRootErrorCodeException() {
@@ -94,4 +92,5 @@ public class ErrorCodeException extends RuntimeException {
 		}
 		return root;
 	}
+
 }
