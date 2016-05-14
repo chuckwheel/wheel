@@ -21,10 +21,6 @@ import com.google.common.collect.Lists;
  */
 public class NetHelper {
 
-	public static void main(String[] args) throws SocketException {
-		System.out.println(getAllLocalIPs());
-	}
-
 	private static final AtomicReference<LocalIpFilter> localIpFilter = new AtomicReference<LocalIpFilter>(
 			new LocalIpFilter() {
 				@Override
@@ -34,10 +30,10 @@ public class NetHelper {
 				}
 			});
 
-	public static Collection<InetAddress> getAllLocalIPs() throws SocketException {
+	public static Collection<InetAddress> getAllLocalIps() throws Exception {
 		List<InetAddress> listAdr = Lists.newArrayList();
 		Enumeration<NetworkInterface> nifs = NetworkInterface.getNetworkInterfaces();
-		if (nifs == null){
+		if (nifs == null) {
 			return listAdr;
 		}
 		while (nifs.hasMoreElements()) {
@@ -51,5 +47,13 @@ public class NetHelper {
 			}
 		}
 		return listAdr;
+	}
+
+	public static InetAddress getLocalIp() throws Exception {
+		return getAllLocalIps().iterator().next();
+	}
+	
+	public static void main(String[] args) throws Exception {
+		System.out.println(getAllLocalIps());
 	}
 }
