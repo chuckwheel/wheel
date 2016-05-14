@@ -1,7 +1,7 @@
 package io.wheel;
 
 /**
- * 初始化接口
+ * Initializable
  * 
  * @author chuck
  * @since 2013-10-10

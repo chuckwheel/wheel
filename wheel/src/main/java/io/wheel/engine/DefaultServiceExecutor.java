@@ -1,8 +1,5 @@
 package io.wheel.engine;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.wheel.registry.ServiceExp;
 
 /**
@@ -13,8 +10,6 @@ import io.wheel.registry.ServiceExp;
  * @version 1.0
  */
 public class DefaultServiceExecutor implements ServiceExecutor {
-
-	private static Logger logger = LoggerFactory.getLogger(DefaultServiceExecutor.class);
 
 	@Override
 	public RpcResponse execute(ServiceExp serviceExp, RpcRequest request) throws Exception {
@@ -30,7 +25,6 @@ public class DefaultServiceExecutor implements ServiceExecutor {
 			response.setSuccess(true);
 			return response;
 		} catch (Exception t) {
-			logger.error("Invoke local service failed! serviceExp={}", serviceExp, t);
 			Exception cause = (Exception) t.getCause();
 			throw (cause != null) ? cause : t;
 		} finally {

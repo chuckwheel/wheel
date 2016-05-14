@@ -5,9 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.wheel.RpcException;
+import io.wheel.exceptions.NoProtocolException;
 import io.wheel.exceptions.NoProviderException;
 import io.wheel.exceptions.NoServiceException;
-import io.wheel.exceptions.NoTranspoterException;
 import io.wheel.registry.ServiceDiscovery;
 import io.wheel.registry.ServiceImp;
 import io.wheel.registry.ServiceInfo;
@@ -45,7 +45,7 @@ public class DefaultServiceInvoker implements ServiceInvoker {
 		Transporter transporter = transportService.getTransporter(serviceImp.getProtocol());
 		if (transporter == null) {
 			logger.error("Transporter not definition,protocol={}", serviceImp.getProtocol());
-			throw new NoTranspoterException(serviceImp.getProtocol());
+			throw new NoProtocolException(serviceImp.getProtocol());
 		}
 		ServiceProvider<ServiceInfo> provider = serviceDiscovery.getServiceProvider(registry, serviceGroup);
 		if (provider == null) {
@@ -57,7 +57,7 @@ public class DefaultServiceInvoker implements ServiceInvoker {
 			RpcException exception = new RpcException();
 			exception.setErrorCode(response.getResultCode());
 			exception.setErrorMessage(response.getResultMessage());
-			logger.error("Invoke service error,resultCode={}", response.getResultCode());
+			logger.error("Invoke service error,response={}", response);
 			throw exception;
 		}
 		return response;

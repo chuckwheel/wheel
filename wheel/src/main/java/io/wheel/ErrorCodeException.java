@@ -6,10 +6,10 @@ import java.lang.reflect.UndeclaredThrowableException;
 import io.wheel.utils.MessageSourceHelper;
 
 /**
+ * ErrorCodeException
  * 
- * 
- * @author chuan.huang
- * @since 2014-3-5
+ * @author chuck
+ * @since 2014-2-21
  * @version 1.0
  */
 public class ErrorCodeException extends RuntimeException {

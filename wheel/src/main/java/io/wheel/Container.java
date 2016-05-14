@@ -7,6 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+/**
+ * Container
+ * 
+ * @author chuck
+ * @since 2014-2-21
+ * @version 1.0
+ */
 public class Container {
 
 	private static final Logger logger = LoggerFactory.getLogger(Container.class);

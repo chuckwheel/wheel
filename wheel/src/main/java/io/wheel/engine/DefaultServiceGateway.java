@@ -26,7 +26,7 @@ import io.wheel.registry.ServiceRepository;
  */
 public class DefaultServiceGateway implements ServiceGateway {
 
-	private static Logger logger = LoggerFactory.getLogger(DefaultServiceExecutor.class);
+	private static Logger logger = LoggerFactory.getLogger(DefaultServiceGateway.class);
 
 	private Domain domain;
 

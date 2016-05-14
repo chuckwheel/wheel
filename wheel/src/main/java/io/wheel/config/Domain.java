@@ -25,7 +25,7 @@ import org.springframework.util.CollectionUtils;
 import io.wheel.Initializable;
 
 /**
- * 
+ * Domain
  * 
  * @author chuck
  * @since 2014-2-21

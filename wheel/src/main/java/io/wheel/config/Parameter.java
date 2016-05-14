@@ -1,7 +1,7 @@
 package io.wheel.config;
 
 /**
- * 
+ * Parameter
  * 
  * @author chuck
  * @since 2014-2-21
