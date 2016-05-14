@@ -10,7 +10,13 @@ import io.wheel.engine.RpcResponse;
 import io.wheel.engine.ServiceGateway;
 import io.wheel.registry.ServiceInfo;
 import io.wheel.transport.Transporter;
-
+/**
+ * 
+ * 
+ * @author chuck
+ * @since 2014-2-21
+ * @version 1.0
+ */
 public class HttpTransporter implements Transporter {
 
 	private static Logger logger = LoggerFactory.getLogger(HttpTransporter.class);

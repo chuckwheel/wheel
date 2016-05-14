@@ -25,7 +25,13 @@ import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
 import io.wheel.engine.ServiceInvoker;
 import io.wheel.utils.ClassHelper;
-
+/**
+ * 
+ * 
+ * @author chuck
+ * @since 2014-2-21
+ * @version 1.0
+ */
 public class ServiceImporter
 		implements MethodInterceptor, FactoryBean<Object>, InitializingBean, ApplicationContextAware {
 

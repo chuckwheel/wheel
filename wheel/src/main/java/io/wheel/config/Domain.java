@@ -24,6 +24,13 @@ import org.springframework.util.CollectionUtils;
 
 import io.wheel.Initializable;
 
+/**
+ * 
+ * 
+ * @author chuck
+ * @since 2014-2-21
+ * @version 1.0
+ */
 public class Domain implements ApplicationContextAware, ApplicationListener<ApplicationEvent> {
 
 	private Logger logger = LoggerFactory.getLogger(Domain.class);

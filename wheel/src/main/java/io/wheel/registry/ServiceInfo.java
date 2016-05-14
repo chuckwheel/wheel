@@ -3,7 +3,13 @@ package io.wheel.registry;
 import java.util.Map;
 
 import org.codehaus.jackson.map.annotate.JsonRootName;
-
+/**
+ * 
+ * 
+ * @author chuck
+ * @since 2014-2-21
+ * @version 1.0
+ */
 @JsonRootName("ServiceInfo")
 public class ServiceInfo {
 

@@ -9,7 +9,13 @@ import org.slf4j.LoggerFactory;
 import io.wheel.Initializable;
 import io.wheel.config.Domain;
 import io.wheel.config.Protocol;
-
+/**
+ * 
+ * 
+ * @author chuck
+ * @since 2014-2-21
+ * @version 1.0
+ */
 public class DefaultTransportService implements TransportService, Initializable {
 
 	private Logger logger = LoggerFactory.getLogger(DefaultTransportService.class);

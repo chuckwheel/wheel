@@ -19,7 +19,13 @@ import com.caucho.hessian.io.HessianOutput;
 import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
 import io.wheel.engine.ServiceGateway;
-
+/**
+ * 
+ * 
+ * @author chuck
+ * @since 2014-2-21
+ * @version 1.0
+ */
 public class HttpGateway extends HttpServlet {
 
 	private static Logger logger = LoggerFactory.getLogger(HttpGateway.class);

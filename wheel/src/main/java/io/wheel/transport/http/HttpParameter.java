@@ -1,7 +1,13 @@
 package io.wheel.transport.http;
 
 import io.wheel.config.Parameter;
-
+/**
+ * 
+ * 
+ * @author chuck
+ * @since 2014-2-21
+ * @version 1.0
+ */
 public enum HttpParameter implements Parameter {
 
 	SERVICE_PATH("servicePath", String.class, "/wheel"),

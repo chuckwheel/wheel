@@ -1,5 +1,11 @@
 package io.wheel.registry;
-
+/**
+ * 
+ * 
+ * @author chuck
+ * @since 2014-2-21
+ * @version 1.0
+ */
 public class MethodConfig {
 
 	private int timeout = 5;

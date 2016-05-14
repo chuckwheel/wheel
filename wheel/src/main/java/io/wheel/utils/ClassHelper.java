@@ -13,7 +13,13 @@ import org.springframework.aop.framework.AdvisedSupport;
 import org.springframework.aop.framework.AopProxy;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeanUtils;
-
+/**
+ * 
+ * 
+ * @author chuck
+ * @since 2014-2-21
+ * @version 1.0
+ */
 public class ClassHelper {
 	public static String[] getSimplePropertyNames(Class<?> clazz) {
 

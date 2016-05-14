@@ -16,7 +16,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.wheel.transport.DefaultTransportService;
-
+/**
+ * 
+ * 
+ * @author chuck
+ * @since 2014-2-21
+ * @version 1.0
+ */
 public class NetUtils {
     
 	private static final Logger logger = LoggerFactory.getLogger(NetUtils.class);

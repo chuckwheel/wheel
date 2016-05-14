@@ -17,7 +17,13 @@ import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
 import io.wheel.registry.ServiceInfo;
 import io.wheel.utils.HessianUtils;
-
+/**
+ * 
+ * 
+ * @author chuck
+ * @since 2014-2-21
+ * @version 1.0
+ */
 public class HttpClient {
 
 	private static Logger logger = LoggerFactory.getLogger(HttpClient.class);

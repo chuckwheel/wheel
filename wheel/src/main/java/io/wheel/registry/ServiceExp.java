@@ -5,7 +5,13 @@ import java.lang.reflect.Method;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
-
+/**
+ * 
+ * 
+ * @author chuck
+ * @since 2014-2-21
+ * @version 1.0
+ */
 public class ServiceExp {
 	// 服务码
 	private String serviceCode;

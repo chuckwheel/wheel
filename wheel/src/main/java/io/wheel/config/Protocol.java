@@ -8,10 +8,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * Protocol
+ * 
+ * @author chuck
+ * @since 2014-2-21
+ * @version 1.0
+ */
 public class Protocol {
 
 	// 协议名称
-	private String name = "http";
+	private String name = "netty";
 	// 监听主机
 	private String host;
 	// 监听端口
@@ -20,7 +27,7 @@ public class Protocol {
 	private String parameter;
 	// 是否默认
 	private boolean isDefault = false;
-
+	// 参数键值
 	private Map<String, String> parameterValues = new HashMap<String, String>();
 
 	public String getName() {
@@ -98,7 +105,7 @@ public class Protocol {
 			return (T) value;
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);

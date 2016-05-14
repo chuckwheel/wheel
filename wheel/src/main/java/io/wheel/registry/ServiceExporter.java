@@ -4,7 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.FactoryBean;
-
+/**
+ * 
+ * 
+ * @author chuck
+ * @since 2014-2-21
+ * @version 1.0
+ */
 public class ServiceExporter<T> implements FactoryBean<T> {
 
 	// 本地执行时超时时间

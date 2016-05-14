@@ -11,7 +11,13 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.apache.curator.x.discovery.LocalIpFilter;
 
 import com.google.common.collect.Lists;
-
+/**
+ * 
+ * 
+ * @author chuck
+ * @since 2014-2-21
+ * @version 1.0
+ */
 public class InetAddressHelper {
 
 	public static void main(String[] args) throws SocketException {

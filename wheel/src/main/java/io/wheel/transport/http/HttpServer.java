@@ -8,7 +8,13 @@ import org.slf4j.LoggerFactory;
 
 import io.wheel.config.Protocol;
 import io.wheel.engine.ServiceGateway;
-
+/**
+ * 
+ * 
+ * @author chuck
+ * @since 2014-2-21
+ * @version 1.0
+ */
 public class HttpServer {
 
 	private Logger logger = LoggerFactory.getLogger(HttpServer.class);
