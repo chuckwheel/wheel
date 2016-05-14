@@ -35,23 +35,27 @@ public class DefaultServiceInvoker implements ServiceInvoker {
 	@Override
 	public RpcResponse invoke(RpcRequest request) throws Exception {
 		String serviceCode = request.getServiceCode();
+		
 		ServiceImp serviceImp = serviceRepository.getServiceImp(serviceCode);
 		if (serviceImp == null) {
 			logger.error("Service not definition,serviceCode={}", serviceCode);
 			throw new NoServiceException(serviceCode);
 		}
-		String registry = serviceImp.getRegistry();
-		String serviceGroup = serviceImp.getServiceGroup();
+		
 		Transporter transporter = transportService.getTransporter(serviceImp.getProtocol());
 		if (transporter == null) {
 			logger.error("Transporter not definition,protocol={}", serviceImp.getProtocol());
 			throw new NoProtocolException(serviceImp.getProtocol());
 		}
+
+		String registry = serviceImp.getRegistry();
+		String serviceGroup = serviceImp.getServiceGroup();
 		ServiceProvider<ServiceInfo> provider = serviceDiscovery.getServiceProvider(registry, serviceGroup);
 		if (provider == null) {
 			logger.error("ServiceProvider not definition,serviceCode={}", serviceCode);
 			throw new NoProviderException(serviceCode);
 		}
+		
 		RpcResponse response = transporter.invoke(provider, request);
 		if (!response.isSuccess()) {
 			RpcException exception = new RpcException();
