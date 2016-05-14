@@ -19,7 +19,7 @@ import com.google.common.collect.Lists;
  * @since 2014-2-21
  * @version 1.0
  */
-public class InetAddressHelper {
+public class NetHelper {
 
 	public static void main(String[] args) throws SocketException {
 		System.out.println(getAllLocalIPs());
@@ -37,13 +37,11 @@ public class InetAddressHelper {
 	public static Collection<InetAddress> getAllLocalIPs() throws SocketException {
 		List<InetAddress> listAdr = Lists.newArrayList();
 		Enumeration<NetworkInterface> nifs = NetworkInterface.getNetworkInterfaces();
-		if (nifs == null)
+		if (nifs == null){
 			return listAdr;
-
+		}
 		while (nifs.hasMoreElements()) {
 			NetworkInterface nif = nifs.nextElement();
-			// We ignore subinterfaces - as not yet needed.
-
 			Enumeration<InetAddress> adrs = nif.getInetAddresses();
 			while (adrs.hasMoreElements()) {
 				InetAddress adr = adrs.nextElement();

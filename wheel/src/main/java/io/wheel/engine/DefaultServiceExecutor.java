@@ -1,5 +1,9 @@
 package io.wheel.engine;
 
+import java.lang.reflect.Method;
+
+import org.springframework.util.ReflectionUtils;
+
 import io.wheel.registry.ServiceExp;
 
 /**
@@ -18,15 +22,13 @@ public class DefaultServiceExecutor implements ServiceExecutor {
 		RpcResponse response = new RpcResponse();
 		serviceContext.setResponse(response);
 		try {
-			Object obj = serviceExp.getTargetObject();
+			Object target = serviceExp.getTargetObject();
 			Object[] args = request.getArguments();
-			Object result = serviceExp.getTargetMethod().invoke(obj, args);
+			Method method = serviceExp.getTargetMethod();
+			Object result = ReflectionUtils.invokeMethod(method, target, args);
 			response.setResult(result);
 			response.setSuccess(true);
 			return response;
-		} catch (Exception t) {
-			Exception cause = (Exception) t.getCause();
-			throw (cause != null) ? cause : t;
 		} finally {
 			ServiceContext.remove();
 		}

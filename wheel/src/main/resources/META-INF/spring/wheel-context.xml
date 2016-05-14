@@ -20,7 +20,7 @@
 		</property>
 	</bean>
 	
-	<bean id="messageSourceHelper" class="io.wheel.utils.MessageSourceHelper">
+	<bean id="defaultMessageSource" class="io.wheel.DefaultMessageSource">
 		<property name="messageSource" ref="messageSource"/>
 	</bean>
 	
