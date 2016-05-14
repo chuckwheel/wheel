@@ -15,7 +15,9 @@ import org.codehaus.jackson.map.annotate.JsonRootName;
 public class ServiceInfo {
 
 	private String serviceCode;
+	
 	private int timeout;
+	
 	private Map<String, String> protocols;
 
 	public String getServiceCode() {
