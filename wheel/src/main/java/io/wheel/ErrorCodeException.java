@@ -3,8 +3,6 @@ package io.wheel;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
 
-import io.wheel.utils.MessageSourceHelper;
-
 /**
  * ErrorCodeException
  * 
@@ -42,7 +40,7 @@ public class ErrorCodeException extends RuntimeException {
 		super("Error code exception!", cause);
 		this.errorCode = errorCode;
 		this.arguments = arguments;
-		this.errorMessage = MessageSourceHelper.getMessage(errorCode, arguments, super.getMessage());
+		this.errorMessage = DefaultMessageSource.getMessage(errorCode, arguments, super.getMessage());
 	}
 
 	public String getErrorCode() {

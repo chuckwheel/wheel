@@ -1,8 +1,7 @@
-package io.wheel.utils;
+package io.wheel;
 
 import java.util.Locale;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 
@@ -13,14 +12,13 @@ import org.springframework.context.MessageSourceAware;
  * @since 2013-10-10
  * @version 1.0
  */
-public class MessageSourceHelper implements MessageSourceAware {
+public class DefaultMessageSource implements MessageSourceAware {
 
-	@Autowired
 	private static volatile MessageSource messageSource;
 
 	@Override
 	public void setMessageSource(MessageSource messageSource) {
-		MessageSourceHelper.messageSource = messageSource;
+		DefaultMessageSource.messageSource = messageSource;
 	}
 
 	public static String getMessage(String code) {
