@@ -8,7 +8,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 
 /**
- * Hessian Decoder
+ * HessianDecoder
  * 
  * @author chuck
  * @since 2014-2-21

@@ -11,8 +11,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.apache.curator.x.discovery.LocalIpFilter;
 
 import com.google.common.collect.Lists;
+
 /**
- * 
+ * InetAddressHelper
  * 
  * @author chuck
  * @since 2014-2-21

@@ -13,8 +13,9 @@ import org.springframework.aop.framework.AdvisedSupport;
 import org.springframework.aop.framework.AopProxy;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeanUtils;
+
 /**
- * 
+ * ClassHelper
  * 
  * @author chuck
  * @since 2014-2-21
@@ -25,7 +26,7 @@ public class ClassHelper {
 
 		PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(clazz);
 		List<String> result = new ArrayList<String>();
-		if (propertyDescriptors!=null) {
+		if (propertyDescriptors != null) {
 			for (PropertyDescriptor descriptor : propertyDescriptors) {
 				if (descriptor == null)
 					continue;
@@ -40,7 +41,7 @@ public class ClassHelper {
 	public static String[] getIndexedPropertyNames(Class<?> clazz) {
 		PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(clazz);
 		List<String> result = new ArrayList<String>();
-		if (propertyDescriptors!=null) {
+		if (propertyDescriptors != null) {
 			for (PropertyDescriptor descriptor : propertyDescriptors) {
 				if (descriptor == null)
 					continue;
@@ -55,7 +56,7 @@ public class ClassHelper {
 	public static String[] getPropertyNames(Class<?> clazz) {
 		PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(clazz);
 		List<String> result = new ArrayList<String>();
-		if (propertyDescriptors!=null) {
+		if (propertyDescriptors != null) {
 			for (PropertyDescriptor descriptor : propertyDescriptors) {
 				if (descriptor == null)
 					continue;
@@ -69,8 +70,7 @@ public class ClassHelper {
 		return BeanUtils.getPropertyDescriptors(clazz);
 	}
 
-	public static Method getMethod(Class<?> clazz, String name,
-			Class<?>... parameterTypes) {
+	public static Method getMethod(Class<?> clazz, String name, Class<?>... parameterTypes) {
 
 		try {
 			return clazz.getMethod(name, parameterTypes);
@@ -83,7 +83,7 @@ public class ClassHelper {
 		if (clazz == null)
 			throw new NullPointerException("Parameter clazz cann't be null!");
 		Method[] methods = clazz.getMethods();
-		if (methods!=null) {
+		if (methods != null) {
 			for (Method method : methods) {
 				if (method.getName().equals(methodName))
 					return method;
@@ -96,8 +96,7 @@ public class ClassHelper {
 	@SuppressWarnings("unchecked")
 	public static <T> T readStaticFieldValue(Class<?> clazz, String fieldName) {
 		try {
-			return (T) FieldUtils.readDeclaredStaticField(clazz, fieldName,
-					true);
+			return (T) FieldUtils.readDeclaredStaticField(clazz, fieldName, true);
 		} catch (Throwable t) {
 			return null;
 		}
@@ -106,8 +105,7 @@ public class ClassHelper {
 	@SuppressWarnings("unchecked")
 	public static <T> T readStaticFieldValue(String className, String fieldName) {
 		try {
-			return (T) FieldUtils.readDeclaredStaticField(
-					Class.forName(className), fieldName, true);
+			return (T) FieldUtils.readDeclaredStaticField(Class.forName(className), fieldName, true);
 		} catch (Throwable t) {
 			return null;
 		}
@@ -125,7 +123,7 @@ public class ClassHelper {
 			return null;
 		return readStaticFieldValue(className, fieldName);
 	}
-	
+
 	/*
 	 * 获得代理对象类型
 	 */
@@ -148,15 +146,15 @@ public class ClassHelper {
 			} else {
 				return proxy.getClass();
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
+
 	public static String getMethodFullName(Method method) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(method.getDeclaringClass().getName()+"#");
+		sb.append(method.getDeclaringClass().getName() + "#");
 		sb.append(method.getName());
 		sb.append("(");
 		Class<?>[] pts = method.getParameterTypes();

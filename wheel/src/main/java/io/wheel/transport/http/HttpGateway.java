@@ -19,8 +19,9 @@ import com.caucho.hessian.io.HessianOutput;
 import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
 import io.wheel.engine.ServiceGateway;
+
 /**
- * 
+ * HttpGateway
  * 
  * @author chuck
  * @since 2014-2-21

@@ -4,9 +4,10 @@ import org.apache.curator.x.discovery.ServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.wheel.ErrorCode;
-import io.wheel.ErrorCodeException;
-import io.wheel.exceptions.ServiceUndefinedException;
+import io.wheel.RpcException;
+import io.wheel.exceptions.NoProviderException;
+import io.wheel.exceptions.NoServiceException;
+import io.wheel.exceptions.NoTranspoterException;
 import io.wheel.registry.ServiceDiscovery;
 import io.wheel.registry.ServiceImp;
 import io.wheel.registry.ServiceInfo;
@@ -15,7 +16,7 @@ import io.wheel.transport.TransportService;
 import io.wheel.transport.Transporter;
 
 /**
- * 
+ * DefaultServiceInvoker
  * 
  * @author chuck
  * @since 2014-2-21
@@ -32,36 +33,34 @@ public class DefaultServiceInvoker implements ServiceInvoker {
 	private ServiceRepository serviceRepository;
 
 	@Override
-	public RpcResponse invoke(RpcRequest request) {
+	public RpcResponse invoke(RpcRequest request) throws Exception {
 		String serviceCode = request.getServiceCode();
 		ServiceImp serviceImp = serviceRepository.getServiceImp(serviceCode);
 		if (serviceImp == null) {
-			throw new ServiceUndefinedException(serviceCode);
+			logger.error("Service not definition,serviceCode={}", serviceCode);
+			throw new NoServiceException(serviceCode);
 		}
-		RpcResponse response = null;
-		try {
-			String registry = serviceImp.getRegistry();
-			String serviceGroup = serviceImp.getServiceGroup();
-			ServiceProvider<ServiceInfo> provider = serviceDiscovery.getServiceProvider(registry, serviceGroup);
-			Transporter transporter = transportService.getTransporter(serviceImp.getProtocol());
-			response = transporter.invoke(provider, request);
-		} catch (Exception e) {
-			logger.error("Call remote service error!serviceCode={},method name={}", e);
-			throw new ErrorCodeException(ErrorCode.SERVICE_INVOKE_ERROR, e);
+		String registry = serviceImp.getRegistry();
+		String serviceGroup = serviceImp.getServiceGroup();
+		Transporter transporter = transportService.getTransporter(serviceImp.getProtocol());
+		if (transporter == null) {
+			logger.error("Transporter not definition,protocol={}", serviceImp.getProtocol());
+			throw new NoTranspoterException(serviceImp.getProtocol());
 		}
-
-		if (response == null) {
-			throw new ErrorCodeException(ErrorCode.SERVICE_INVOKE_ERROR);
+		ServiceProvider<ServiceInfo> provider = serviceDiscovery.getServiceProvider(registry, serviceGroup);
+		if (provider == null) {
+			logger.error("ServiceProvider not definition,serviceCode={}", serviceCode);
+			throw new NoProviderException(serviceCode);
 		}
-
+		RpcResponse response = transporter.invoke(provider, request);
 		if (!response.isSuccess()) {
-			ErrorCodeException e = new ErrorCodeException();
-			e.setErrorCode(response.getResultCode());
-			e.setErrorMessage(response.getResultMessage());
-			throw e;
+			RpcException exception = new RpcException();
+			exception.setErrorCode(response.getResultCode());
+			exception.setErrorMessage(response.getResultMessage());
+			logger.error("Invoke service error,resultCode={}", response.getResultCode());
+			throw exception;
 		}
 		return response;
-
 	}
 
 	public void setServiceDiscovery(ServiceDiscovery serviceDiscovery) {

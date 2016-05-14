@@ -4,8 +4,9 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
 /**
- * 
+ * ServiceMethod
  * 
  * @author chuck
  * @since 2014-2-21
@@ -14,7 +15,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD })
 public @interface ServiceMethod {
-	
+
 	// 服务组
 	String value() default "";
 
@@ -22,8 +23,8 @@ public @interface ServiceMethod {
 	int timeout() default 5;
 
 	// 注册中心
-//	String registry() default "*";
+	// String registry() default "*";
 
 	// 发布协议
-//	String protocol() default "*";
+	// String protocol() default "*";
 }

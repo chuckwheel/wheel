@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 
+ * ServiceBean
  * 
  * @author chuck
  * @since 2014-2-21
@@ -15,13 +15,16 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE })
 public @interface ServiceBean {
-	
+
 	// 服务组
 	String value() default "";
+
 	// 超时
 	int timeout() default 5;
+
 	// 注册中心
 	String registry() default "*";
+
 	// 发布协议
 	String protocol() default "*";
 }

@@ -3,7 +3,7 @@ package io.wheel.registry;
 import org.apache.curator.x.discovery.ServiceProvider;
 
 /**
- * Service discovery
+ * ServiceDiscovery
  * 
  * @author chuck
  * @since 2014-2-21

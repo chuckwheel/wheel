@@ -6,7 +6,7 @@ package io.wheel.engine;
 import io.wheel.registry.ServiceExp;
 
 /**
- * 
+ * ServiceExecutor
  * 
  * @author chuck
  * @since 2014-2-21
@@ -21,5 +21,5 @@ public interface ServiceExecutor {
 	 * @return
 	 * @throws Exception
 	 */
-	RpcResponse execute(ServiceExp serviceExp,RpcRequest request) throws Exception;
+	RpcResponse execute(ServiceExp serviceExp, RpcRequest request) throws Exception;
 }

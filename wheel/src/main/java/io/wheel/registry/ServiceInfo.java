@@ -3,8 +3,9 @@ package io.wheel.registry;
 import java.util.Map;
 
 import org.codehaus.jackson.map.annotate.JsonRootName;
+
 /**
- * 
+ * ServiceInfo
  * 
  * @author chuck
  * @since 2014-2-21
@@ -41,11 +42,11 @@ public class ServiceInfo {
 		this.protocols = protocols;
 	}
 
-	public String getProtocol(String name){
-		if(protocols!=null){
+	public String getProtocol(String name) {
+		if (protocols != null) {
 			return protocols.get(name);
-		}else{
-			return null;  
+		} else {
+			return null;
 		}
 	}
 }

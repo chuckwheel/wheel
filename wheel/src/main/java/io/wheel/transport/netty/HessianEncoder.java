@@ -10,7 +10,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
 /**
- * Hessian Encoder
+ * HessianEncoder
  * 
  * @author chuck
  * @since 2014-2-21

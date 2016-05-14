@@ -1,8 +1,9 @@
 package io.wheel.transport.netty;
 
 import io.wheel.config.Parameter;
+
 /**
- * 
+ * NettyParameter
  * 
  * @author chuck
  * @since 2014-2-21

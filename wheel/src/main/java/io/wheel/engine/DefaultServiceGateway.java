@@ -13,12 +13,12 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import io.wheel.ErrorCode;
 import io.wheel.ErrorCodeException;
 import io.wheel.config.Domain;
-import io.wheel.exceptions.ServiceUndefinedException;
+import io.wheel.exceptions.NoServiceException;
 import io.wheel.registry.ServiceExp;
 import io.wheel.registry.ServiceRepository;
 
 /**
- * 
+ * DefaultServiceGateway
  * 
  * @author chuck
  * @since 2014-2-21
@@ -66,7 +66,7 @@ public class DefaultServiceGateway implements ServiceGateway {
 		String serviceCode = request.getServiceCode();
 		final ServiceExp serviceExp = serviceRepository.getServiceExp(serviceCode);
 		if (serviceExp == null) {
-			throw new ServiceUndefinedException(serviceCode);
+			throw new NoServiceException(serviceCode);
 		}
 		int timeout = this.getTimeout(serviceExp, request);
 		try {

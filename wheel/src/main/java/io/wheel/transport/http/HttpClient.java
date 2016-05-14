@@ -17,8 +17,9 @@ import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
 import io.wheel.registry.ServiceInfo;
 import io.wheel.utils.HessianUtils;
+
 /**
- * 
+ * HttpClient
  * 
  * @author chuck
  * @since 2014-2-21

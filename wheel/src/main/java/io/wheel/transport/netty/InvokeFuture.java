@@ -6,7 +6,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Invoke Future
+ * InvokeFuture
  * 
  * @author chuck
  * @since 2014-2-21
@@ -16,13 +16,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class InvokeFuture<T> {
 
 	private T result;
-	
+
 	private Throwable cause;
-	
+
 	private Semaphore semaphore = new Semaphore(0);
-	
+
 	private AtomicBoolean done = new AtomicBoolean(false);
-	
+
 	private AtomicBoolean success = new AtomicBoolean(false);
 
 	public boolean isDone() {
@@ -43,7 +43,7 @@ public class InvokeFuture<T> {
 			}
 		}
 		if (cause != null) {
-			throw new RuntimeException(cause);
+			throw new Exception(cause);
 		}
 		return this.result;
 	}

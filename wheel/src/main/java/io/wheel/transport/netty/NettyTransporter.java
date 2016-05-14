@@ -10,8 +10,9 @@ import io.wheel.engine.RpcResponse;
 import io.wheel.engine.ServiceGateway;
 import io.wheel.registry.ServiceInfo;
 import io.wheel.transport.Transporter;
+
 /**
- * 
+ * NettyTransporter
  * 
  * @author chuck
  * @since 2014-2-21
@@ -41,7 +42,7 @@ public class NettyTransporter implements Transporter {
 	}
 
 	@Override
-	public RpcResponse invoke(ServiceProvider<ServiceInfo> provider, RpcRequest request) {
+	public RpcResponse invoke(ServiceProvider<ServiceInfo> provider, RpcRequest request) throws Exception {
 		return nettyClient.invoke(provider, request);
 	}
 

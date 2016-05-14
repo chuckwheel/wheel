@@ -1,8 +1,9 @@
 package io.wheel.transport.http;
 
 import io.wheel.config.Parameter;
+
 /**
- * 
+ * HttpParameter
  * 
  * @author chuck
  * @since 2014-2-21
@@ -13,7 +14,7 @@ public enum HttpParameter implements Parameter {
 	SERVICE_PATH("servicePath", String.class, "/wheel"),
 
 	CONNECT_TIMEOUT("connectTimeout", Integer.class, 500),
-	
+
 	MAX_CONNECTIONS("maxConnections", Integer.class, 500);
 
 	private String key;

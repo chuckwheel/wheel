@@ -18,7 +18,7 @@ public class Container {
 	private static final AtomicBoolean running = new AtomicBoolean(true);
 
 	private static final Object lock = new Object();
-	
+
 	private ClassPathXmlApplicationContext context;
 
 	public static void main(String[] args) {
@@ -31,7 +31,7 @@ public class Container {
 			logger.error(e.getMessage(), e);
 			System.exit(1);
 		}
-		synchronized(lock){
+		synchronized (lock) {
 			while (running.get()) {
 				try {
 					lock.wait();
@@ -48,7 +48,7 @@ public class Container {
 		if (StringUtils.equalsIgnoreCase(System.getProperty(SHUTDOWN_HOOK_KEY), "true")) {
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				public void run() {
-					synchronized(lock){
+					synchronized (lock) {
 						container.stop();
 						running.set(false);
 						lock.notify();

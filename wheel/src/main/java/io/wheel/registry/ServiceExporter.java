@@ -4,8 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.FactoryBean;
+
 /**
- * 
+ * ServiceExporter
  * 
  * @author chuck
  * @since 2014-2-21
@@ -44,7 +45,7 @@ public class ServiceExporter<T> implements FactoryBean<T> {
 	public void setBean(T object) {
 		this.object = object;
 	}
-	
+
 	public void setReference(T object) {
 		this.object = object;
 	}

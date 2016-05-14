@@ -8,7 +8,7 @@ package io.wheel.config;
  * @version 1.0
  */
 public interface Parameter {
-	
+
 	String getKey();
 
 	Class<?> getType();

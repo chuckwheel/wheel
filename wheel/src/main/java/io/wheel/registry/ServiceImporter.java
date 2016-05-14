@@ -25,6 +25,7 @@ import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
 import io.wheel.engine.ServiceInvoker;
 import io.wheel.utils.ClassHelper;
+
 /**
  * 
  * 
@@ -121,7 +122,7 @@ public class ServiceImporter
 		}
 	}
 
-	private Object call(RpcRequest request) {
+	private Object call(RpcRequest request) throws Throwable {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Process sync invoke,request={}", request);
 		}

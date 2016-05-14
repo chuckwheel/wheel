@@ -10,8 +10,9 @@ import io.wheel.engine.RpcResponse;
 import io.wheel.engine.ServiceGateway;
 import io.wheel.registry.ServiceInfo;
 import io.wheel.transport.Transporter;
+
 /**
- * 
+ * HttpTransporter
  * 
  * @author chuck
  * @since 2014-2-21

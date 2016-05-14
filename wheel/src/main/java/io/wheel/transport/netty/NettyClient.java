@@ -28,10 +28,11 @@ import io.wheel.ErrorCodeException;
 import io.wheel.config.Protocol;
 import io.wheel.engine.RpcRequest;
 import io.wheel.engine.RpcResponse;
+import io.wheel.exceptions.NoProtocolException;
 import io.wheel.registry.ServiceInfo;
 
 /**
- * 
+ * NettyClient
  * 
  * @author chuck
  * @since 2014-2-21
@@ -84,8 +85,8 @@ public class NettyClient {
 		ServiceInfo serviceInfo = target.getPayload();
 		String protocols = serviceInfo.getProtocol(protocol.getName());
 		if (protocols == null) {
-			logger.error("Undefined protocol,protocol={}", protocol);
-			throw new ErrorCodeException(ErrorCode.UNDEFINED_PROTOCOL, new Object[] { protocol });
+			logger.error("Protocol not definition,protocol={}", protocol);
+			throw new NoProtocolException(protocol.getName());
 		}
 		String[] values = protocols.split(":");
 		String address = values[0];
@@ -96,7 +97,6 @@ public class NettyClient {
 			if (channel.attr(writableKey).get()) {
 				return channel;
 			} else {
-				// 新连接
 				Channel newChannel = clientBootstrap.connect(address, port).sync().channel();
 				newChannel.attr(closeableKey).set(true);
 				return newChannel;
@@ -105,7 +105,6 @@ public class NettyClient {
 		try {
 			channel = clientBootstrap.connect(address, port).sync().channel();
 			if (channels.containsKey(channelCode)) {
-				// 新连接
 				channel.attr(closeableKey).set(true);
 				channel.attr(targetKey).set(target);
 				return channel;
@@ -116,14 +115,13 @@ public class NettyClient {
 				return channel;
 			}
 		} catch (Exception e) {
-			// 标记为不可用
-			provider.noteError(target);
 			logger.error("Init client connector failed! serverId:", e);
+			provider.noteError(target);
 			throw e;
 		}
 	}
 
-	public RpcResponse invoke(ServiceProvider<ServiceInfo> provider, RpcRequest request) {
+	public RpcResponse invoke(ServiceProvider<ServiceInfo> provider, RpcRequest request) throws Exception {
 		Channel channel = null;
 		final long invokeId = invokeIds.incrementAndGet();
 		request.setInvokeId(invokeId);
@@ -148,14 +146,10 @@ public class NettyClient {
 				throw new ErrorCodeException(ErrorCode.SERVICE_INVOKE_ERROR);
 			}
 			return result;
-		} catch (ErrorCodeException e) {
-			provider.noteError(channel.attr(targetKey).get());
-			logger.error("Send and receive failed! invokeId={}", invokeId, e);
-			throw e;
 		} catch (Exception e) {
-			provider.noteError(channel.attr(targetKey).get());
 			logger.error("Send and receive failed! invokeId={}", invokeId, e);
-			throw new ErrorCodeException(ErrorCode.SERVICE_INVOKE_ERROR, e);
+			provider.noteError(channel.attr(targetKey).get());
+			throw e;
 		} finally {
 			boolean closeable = channel.attr(closeableKey).get();
 			if (closeable) {

@@ -3,7 +3,7 @@ package io.wheel.registry;
 import java.util.Collection;
 
 /**
- * Service repository
+ * ServiceRepository
  * 
  * @author chuck
  * @since 2014-2-21

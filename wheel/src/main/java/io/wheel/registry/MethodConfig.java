@@ -1,6 +1,7 @@
 package io.wheel.registry;
+
 /**
- * 
+ * MethodConfig
  * 
  * @author chuck
  * @since 2014-2-21
