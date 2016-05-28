@@ -13,7 +13,6 @@
 	
 	<!-- ===================================================== -->
 	<bean class="io.wheel.config.Application" p:appId="consumer" p:nodeId="consumer-1"/>
-	<!-- <bean class="io.wheel.config.Registry" p:address="10.38.66.191:2181"/> -->
 	<bean class="io.wheel.config.Registry" p:address="127.0.0.1:2181"/>
 	<bean class="io.wheel.config.Protocol" p:name="netty"/>
 	
