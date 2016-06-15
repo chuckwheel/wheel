@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.imps.CuratorFrameworkState;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.curator.x.discovery.ProviderStrategy;
 import org.apache.curator.x.discovery.ServiceDiscovery;
@@ -47,6 +48,8 @@ public class DefaultServiceDiscovery implements io.wheel.registry.ServiceDiscove
 
 	private Map<String, ServiceProvider<ServiceInfo>> serviceProviders = new HashMap<String, ServiceProvider<ServiceInfo>>();
 
+	private Map<String,CuratorFramework> curatorClients = new HashMap<String,CuratorFramework>();
+	
 	private Domain domain;
 
 	private ServiceRepository serviceRepository;
@@ -68,11 +71,7 @@ public class DefaultServiceDiscovery implements io.wheel.registry.ServiceDiscove
 			return;
 		}
 		for (Registry registry : domain.getRegistrys().values()) {
-
-			RetryPolicy retryPolicy = new ExponentialBackoffRetry(registry.getSleepTimeMs(), registry.getMaxRetries());
-			CuratorFramework client = CuratorFrameworkFactory.newClient(registry.getAddress(), retryPolicy);
-			client.start();
-
+			CuratorFramework client = this.getCuratorFramework(registry);
 			ServiceDiscoveryBuilder<ServiceInfo> builder = ServiceDiscoveryBuilder.builder(ServiceInfo.class);
 			builder.client(client);
 			builder.basePath(registry.getPath());
@@ -87,6 +86,22 @@ public class DefaultServiceDiscovery implements io.wheel.registry.ServiceDiscove
 		}
 	}
 
+	private CuratorFramework getCuratorFramework(Registry registry) {
+		CuratorFramework client = curatorClients.get(registry.getAddress());
+		if (client == null) {
+			RetryPolicy retryPolicy = new ExponentialBackoffRetry(registry.getSleepTimeMs(), registry.getMaxRetries());
+			client = CuratorFrameworkFactory.newClient(registry.getAddress(), retryPolicy);
+			client.start();
+			curatorClients.put(registry.getAddress(), client);
+			return client;
+		} else if (client.getState() != CuratorFrameworkState.STARTED) {
+			client.start();
+			return client;
+		} else {
+			return null;
+		}
+	}
+	
 	private void registerService(String registryName, ServiceDiscovery<ServiceInfo> serviceDiscovery) throws Exception {
 		Collection<ServiceExp> serviceExps = serviceRepository.getAllServiceExps();
 		Set<String> serviceGroups = new HashSet<String>();
